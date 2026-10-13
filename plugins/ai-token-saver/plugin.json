@@ -1,0 +1,7 @@
+{
+ "$schema":"https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+ "name":"ai-token-saver","version":"0.1.0",
+ "description":"Recommend the lowest-cost suitable available OpenAI model and effort from a live guide, with a Revision citation. Guidance updates on use.",
+ "author":{"name":"Rob Bagley"},
+ "extensions":{"com.openai":{"interface":{"displayName":"AI Token Saver","shortDescription":"Choose models with less waste","longDescription":"Get a model and effort recommendation from the live Model Value Map. Start with the cheapest suitable listed pick, verify the result and upgrade only after a failed check. Guidance refreshes when used. Optional instructions are pasted once. Savings depend on the task and are not guaranteed.","developerName":"Rob Bagley","category":"Productivity","logo":"./assets/icon.svg","composerIcon":"./assets/icon.svg","defaultPrompt":"Recommend a model and effort for my task using current guidance. Cite the Revision."}}}
+}

@@ -1,0 +1,5 @@
+{
+ "name":"ai-token-saver",
+ "interface":{"displayName":"AI Token Saver"},
+ "plugins":[{"name":"ai-token-saver","source":{"source":"local","path":"./plugins/ai-token-saver"},"policy":{"installation":"AVAILABLE","authentication":"ON_INSTALL"},"category":"Productivity"}]
+}

@@ -1,0 +1,8 @@
+node_modules/
+.vercel/
+.env*
+*.zip
+verification-local.json
+.playwright-cli/
+output/
+.vercel
