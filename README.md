@@ -31,7 +31,7 @@ The skill calls `get_guidance` on each invocation. Validated upstream guidance i
 
 ## Public tools
 
-- `get_guidance(platform, category?)`: OpenAI-only task picks and Revision, fetched from the public guide.
+- `get_guidance(platform)`: OpenAI-only task picks and Revision, fetched once from the public guide. Select the applicable category locally.
 - `get_instruction_block(platform, mode?)`: stable bootstrap by default; dated full snapshot on request.
 - `compare_revision(installed_revision)`: optional manual revision check.
 

@@ -5,7 +5,7 @@ const fixture = (revision = 'r1') => ({ updated:'2026-10-13', revision, rule:'Ch
 const response = data => new Response(JSON.stringify(data));
 test('ChatGPT uses the OpenAI platform and never exposes private/cross-vendor fields', async()=>{
  const s=createGuidanceService({fetch:async()=>response(fixture()),sources:['https://example.org/guide.json']});
- const a=await s.getGuidance('chatgpt'); assert.equal(a.revision,'r1'); assert.equal(a.bullets.length,2); assert.equal(a.platform,'chatgpt'); assert.equal(a.source_url,'https://example.org/guide.json'); assert.ok(!JSON.stringify(a).includes('PRIVATE')); assert.deepEqual(a.best_value,a.bullets.map(({task,pick})=>({task,pick})));
+ const a=await s.getGuidance('chatgpt'); assert.equal(a.revision,'r1'); assert.equal(a.bullets.length,2); assert.equal(a.platform,'chatgpt'); assert.equal(a.source_url,'https://example.org/guide.json'); assert.ok(!JSON.stringify(a).includes('PRIVATE')); assert.equal(a.best_value,null);
 });
 test('fallback skips HTTP errors and invalid schemas, and stops on valid data',async()=>{
  let n=0; const s=createGuidanceService({sources:['https://a.test','https://b.test','https://c.test'],fetch:async()=>{n++;return n===1?new Response('',{status:503}):response(n===2?{revision:'bad'}:fixture());}});

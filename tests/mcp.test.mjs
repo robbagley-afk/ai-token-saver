@@ -7,7 +7,8 @@ test('real MCP client initializes, lists all three tools, calls them, rejects us
  const client=new Client({name:'validation',version:'1.0.0'});try{
   await client.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${http.address().port}/mcp`)));
   const tools=await client.listTools();assert.deepEqual(tools.tools.map(t=>t.name),['get_guidance','get_instruction_block','compare_revision']);assert.ok(tools.tools.every(t=>t.annotations.readOnlyHint&&!t.annotations.destructiveHint));
-  const result=await client.callTool({name:'get_guidance',arguments:{platform:'chatgpt'}});assert.equal(result.structuredContent.revision,'integration-r1');
+  assert.ok(!('category' in tools.tools[0].inputSchema.properties));
+  const result=await client.callTool({name:'get_guidance',arguments:{platform:'chatgpt'}});assert.equal(result.structuredContent.revision,'integration-r1');assert.ok(result.content[0].text.includes('Example OpenAI Small low'));assert.ok(result.content[0].text.includes('https://example.org/guide.json'));
   const block=await client.callTool({name:'get_instruction_block',arguments:{platform:'codex'}});assert.ok(block.structuredContent.text.includes('AI Token Saver'));
   const diff=await client.callTool({name:'compare_revision',arguments:{installed_revision:'integration-r1'}});assert.equal(diff.structuredContent.changed,false);
   const invalid=await client.callTool({name:'get_guidance',arguments:{platform:'local'}});assert.equal(invalid.isError,true);
