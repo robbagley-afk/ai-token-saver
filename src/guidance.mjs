@@ -30,7 +30,7 @@ export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sourc
   try{return await inflight;}finally{inflight=null;}
  }
  // chatgpt and codex share the OpenAI list, as the public guide specifies.
- const rowsFor=(d,platform)=>{const rows=d.vendors[platform==='chatgpt'?'codex':platform];if(!rows||!PLATFORMS.includes(platform)||platform==='all')throw Error('Unsupported platform');return rows;};
+ const rowsFor=(d,platform)=>{if(!PLATFORMS.includes(platform)||platform==='all')throw Error('Unsupported platform');const rows=Object.hasOwn(d.vendors,platform==='chatgpt'?'codex':platform)?d.vendors[platform==='chatgpt'?'codex':platform]:null;if(!rows)throw Error('Unsupported platform');return rows;};
  const head=d=>({updated:d.updated,revision:d.revision,rule:d.rule,source_url:d.source_url});
  return {
   async getGuidance(platform,category){
