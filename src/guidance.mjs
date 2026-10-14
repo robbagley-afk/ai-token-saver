@@ -1,4 +1,4 @@
-import {BOOTSTRAP} from './instructions.mjs';
+import {BOOTSTRAP} from './instructions.mjs';import {buildSetupPrompt} from './setup.mjs';
 export const SOURCES=Object.freeze([
  'https://robbagley-afk.github.io/model-value-map/guidance.json',
  'https://raw.githubusercontent.com/robbagley-afk/model-value-map/main/docs/guidance.json',
@@ -38,6 +38,7 @@ export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sourc
    if(platform==='all'){if(category)throw Error('Category filtering needs one platform');return {...head(d),platform,platforms:structuredClone(d.vendors)};}
    let bullets=rowsFor(d,platform);const openai=bullets===d.bullets;if(category){bullets=bullets.filter(b=>b.task.toLowerCase()===category.toLowerCase());if(!bullets.length)throw Error('Unknown task category; call get_guidance without a category to see current choices.');}return {...head(d),best_value:openai?d.best_value:null,platform,bullets:structuredClone(bullets)};},
   async instructionBlock(platform,mode='bootstrap'){if(!PLATFORMS.includes(platform))throw Error('Unsupported platform');if(mode==='bootstrap')return {platform,mode,text:BOOTSTRAP};if(mode!=='snapshot')throw Error('Unsupported instruction mode');const d=await load(),rows=rowsFor(d,platform);return {platform,mode,revision:d.revision,text:`Updated: ${d.updated}\nRevision: ${d.revision}\nSource: ${d.source_url}\n\n${d.rule}\n\n${rows.map(b=>`- ${b.task}: ${b.pick}${b.upgrade?` Upgrade only after a failed check: ${b.upgrade}`:''}`).join('\n')}\n\nThis snapshot can become stale. Invoke AI Token Saver for current guidance. Do not switch the user’s model.`};},
+  async setupPrompt(platforms){const built=buildSetupPrompt({platforms,revision:'pending'});const d=await load();return {revision:d.revision,...buildSetupPrompt({platforms:built.order,revision:d.revision})};},
   async compareRevision(installedRevision){if(!text(installedRevision,128))throw Error('Invalid installed Revision');const d=await load();return {current:d.revision,changed:d.revision!==installedRevision};}
  };
 }

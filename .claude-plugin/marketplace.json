@@ -7,7 +7,7 @@
     {
       "name": "ai-token-saver-all",
       "source": "./plugins/ai-token-saver-all",
-      "description": "Model and effort guidance for Claude, ChatGPT, Codex, Gemini and Grok from a live guide, with optional instruction setup and a weekly change check."
+      "description": "Model and effort guidance for Claude, ChatGPT, Codex, Gemini and Grok from a live guide, with one setup prompt for instructions and an every-two-weeks refresh task on each platform."
     }
   ],
   "metadata": {
