@@ -23,6 +23,15 @@ codex plugin add ai-token-saver-all@ai-token-saver
 
 Any other MCP client: add `https://ai-token-saver.vercel.app/mcp` as a Streamable HTTP server with no authentication. That gives the three tools without the skill. Tested hosts are listed in the release notes. Other hosts are untested.
 
+## Install by pasting a prompt
+
+Paste one of these into the AI app you want it installed in. An app with a terminal installs and verifies it. A chat app without a terminal replies with the exact clicks.
+
+- All Platforms edition: [install/all-platforms.md](install/all-platforms.md)
+- ChatGPT and Codex edition: [install/chatgpt-codex.md](install/chatgpt-codex.md)
+
+Tested: the All Platforms prompt installed the plugin from this repository in a headless Claude Code chat. The Codex and chat-app paths are untested.
+
 ## Installation
 
 Live service and install guide: https://ai-token-saver.vercel.app/
