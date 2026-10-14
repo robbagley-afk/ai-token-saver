@@ -1,0 +1,16 @@
+{
+  "name": "ai-token-saver",
+  "owner": {
+    "name": "Rob Bagley"
+  },
+  "plugins": [
+    {
+      "name": "ai-token-saver-all",
+      "source": "./plugins/ai-token-saver-all",
+      "description": "Model and effort guidance for Claude, ChatGPT, Codex, Gemini and Grok from a live guide, with optional instruction setup and a weekly change check."
+    }
+  ],
+  "metadata": {
+    "description": "AI Token Saver: live model and effort guidance with a Revision citation."
+  }
+}

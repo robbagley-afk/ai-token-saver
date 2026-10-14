@@ -1,0 +1,3 @@
+{
+ "mcpServers":{"ai-token-saver":{"type":"http","url":"https://ai-token-saver.vercel.app/mcp"}}
+}

@@ -2,6 +2,27 @@
 
 A portable ChatGPT/Codex plugin that recommends the cheapest suitable available OpenAI model and effort from a live public guide. It cites the Revision used, leaves model selection to the user, and does not claim guaranteed savings.
 
+## Editions
+
+- **AI Token Saver** (`plugins/ai-token-saver`): OpenAI only, for ChatGPT and Codex.
+- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): the same live guide for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It sets up one stable instruction block on each platform the user chooses and offers one weekly change check that covers all of them. Install one edition per client.
+
+Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
+
+All Platforms install:
+
+```sh
+# Claude Code
+/plugin marketplace add robbagley-afk/ai-token-saver
+/plugin install ai-token-saver-all@ai-token-saver
+
+# Codex
+codex plugin marketplace add robbagley-afk/ai-token-saver
+codex plugin add ai-token-saver-all@ai-token-saver
+```
+
+Any other MCP client: add `https://ai-token-saver.vercel.app/mcp` as a Streamable HTTP server with no authentication. That gives the three tools without the skill. Tested hosts are listed in the release notes. Other hosts are untested.
+
 ## Installation
 
 Live service and install guide: https://ai-token-saver.vercel.app/
@@ -31,13 +52,13 @@ The skill calls `get_guidance` on each invocation. Validated upstream guidance i
 
 ## Public tools
 
-- `get_guidance(platform)`: OpenAI-only task picks and Revision, fetched once from the public guide. Select the applicable category locally.
+- `get_guidance(platform)`: task picks and Revision, fetched once from the public guide. `chatgpt` and `codex` return OpenAI picks only. `claude`, `antigravity` and `grok` return that vendor only. `all` returns every vendor under `platforms`. Select the applicable category locally.
 - `get_instruction_block(platform, mode?)`: stable bootstrap by default; dated full snapshot on request.
 - `compare_revision(installed_revision)`: optional manual revision check.
 
 Tool schemas reject prompt-text arguments. The application accepts no documents or credentials, stores no user state, intentionally logs no request bodies, and never calls an inference service. Hosting providers may retain request/network metadata. See the published privacy page for the full disclosure.
 
-The JSON guide's `codex` section is used for both ChatGPT and Codex, as the public OpenAI guide explicitly specifies. Revision comes consistently from `guidance.json`; its markdown representation can have a different Revision. Only OpenAI-platform fields are returned; global best-value rows and local-model information are excluded.
+The JSON guide's `codex` section is used for both ChatGPT and Codex, as the public OpenAI guide explicitly specifies. Revision comes consistently from `guidance.json`; its markdown representation can have a different Revision. Each platform returns only its own vendor rows; global best-value rows and local-model information are excluded.
 
 ## Development
 

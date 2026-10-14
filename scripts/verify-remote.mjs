@@ -9,6 +9,11 @@ try{
  for(const platform of ['chatgpt','codex']){
   const r=await client.callTool({name:'get_guidance',arguments:{platform}});assert.ok(!r.isError);assert.equal(r.structuredContent.revision,live.revision);assert.ok(r.structuredContent.bullets.length);assert.ok(!/Gemma|LM Studio|Claude|Haiku|Sonnet|Opus|tail\d+/i.test(JSON.stringify(r.structuredContent)));results.tools.push(`get_guidance:${platform}`);
  }
+ for(const platform of ['claude','antigravity','grok']){
+  const r=await client.callTool({name:'get_guidance',arguments:{platform}});assert.ok(!r.isError);assert.equal(r.structuredContent.revision,live.revision);assert.deepEqual(r.structuredContent.bullets.map(b=>b.pick),live.platforms[platform].map(b=>b.pick));assert.ok(!/LM Studio|tail\d+/i.test(JSON.stringify(r.structuredContent)));results.tools.push(`get_guidance:${platform}`);
+ }
+ const every=await client.callTool({name:'get_guidance',arguments:{platform:'all'}});assert.deepEqual(Object.keys(every.structuredContent.platforms).sort(),['antigravity','claude','codex','grok']);assert.ok(!/LM Studio|Gemma|tail\d+/i.test(JSON.stringify(every.structuredContent)));results.tools.push('get_guidance:all');
+ const local=await client.callTool({name:'get_guidance',arguments:{platform:'local'}});assert.equal(local.isError,true);results.tools.push('get_guidance:local rejected');
  const b=await client.callTool({name:'get_instruction_block',arguments:{platform:'chatgpt'}});assert.ok(b.structuredContent.text.includes('AI Token Saver'));results.tools.push('get_instruction_block:bootstrap');
  const s=await client.callTool({name:'get_instruction_block',arguments:{platform:'codex',mode:'snapshot'}});assert.equal(s.structuredContent.revision,live.revision);results.tools.push('get_instruction_block:snapshot');
  for(const [revision,changed] of [[live.revision,false],['release-stub-old-revision',true]]){const r=await client.callTool({name:'compare_revision',arguments:{installed_revision:revision}});assert.equal(r.structuredContent.changed,changed);results.tools.push(`compare_revision:${changed}`);}

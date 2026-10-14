@@ -1,0 +1,10 @@
+{
+  "name": "ai-token-saver-all",
+  "version": "0.2.0",
+  "description": "Recommend the lowest-cost suitable model and effort on Claude, ChatGPT, Codex, Gemini or Grok from a live guide, with a Revision citation. Optional instruction setup and a weekly change check.",
+  "author": {
+    "name": "Rob Bagley"
+  },
+  "homepage": "https://ai-token-saver.vercel.app/",
+  "license": "MIT"
+}

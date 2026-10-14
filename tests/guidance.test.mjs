@@ -31,3 +31,19 @@ test('concurrent cold requests share one fetch and malformed bullets fail closed
  let n=0;const s=createGuidanceService({sources:['https://example.org'],fetch:async()=>{n++;await new Promise(r=>setTimeout(r,10));return response(fixture());}});await Promise.all([s.getGuidance('codex'),s.getGuidance('chatgpt')]);assert.equal(n,1);
  const bad=fixture();bad.platforms.codex[0].pick={x:1};const b=createGuidanceService({sources:['https://example.org'],fetch:async()=>response(bad)});await assert.rejects(b.getGuidance('codex'),/unavailable/);
 });
+const multi = () => { const d=fixture(); d.platforms.claude=[{task:'Mechanical text work',pick:'Example Claude Small low'}]; d.platforms.antigravity=[{task:'Mechanical text work',pick:'Example Gemini Fast low'}]; d.platforms.grok=[{task:'Mechanical text work',pick:'Example Grok low'}]; return d; };
+test('other vendors return their own picks, all returns every public platform, private rows stay excluded',async()=>{
+ const s=createGuidanceService({fetch:async()=>response(multi()),sources:['https://example.org/guide.json']});
+ const c=await s.getGuidance('claude');assert.equal(c.platform,'claude');assert.equal(c.bullets[0].pick,'Example Claude Small low');assert.ok(!JSON.stringify(c).includes('OpenAI'));
+ assert.equal((await s.getGuidance('antigravity')).bullets[0].pick,'Example Gemini Fast low');assert.equal((await s.getGuidance('grok')).bullets[0].pick,'Example Grok low');
+ const o=await s.getGuidance('codex');assert.ok(!/Claude|Gemini|Grok/.test(JSON.stringify(o)));
+ const all=await s.getGuidance('all');assert.equal(all.platform,'all');assert.deepEqual(Object.keys(all.platforms).sort(),['antigravity','claude','codex','grok']);assert.equal(all.revision,'r1');assert.ok(!('bullets' in all));assert.ok(!JSON.stringify(all).includes('PRIVATE'));
+ await assert.rejects(s.getGuidance('local'));await assert.rejects(s.getGuidance('all','Mechanical text work'));
+ const snap=await s.instructionBlock('claude','snapshot');assert.ok(snap.text.includes('Example Claude Small low'));assert.ok(!snap.text.includes('OpenAI'));
+ await assert.rejects(s.instructionBlock('all','snapshot'));assert.ok((await s.instructionBlock('all')).text.includes('AI Token Saver'));
+});
+test('a missing or malformed optional platform fails only that platform',async()=>{
+ const d=multi();delete d.platforms.grok;d.platforms.claude[0].pick={x:1};const s=createGuidanceService({fetch:async()=>response(d),sources:['https://example.org']});
+ await assert.rejects(s.getGuidance('grok'),/Unsupported platform/);await assert.rejects(s.getGuidance('claude'),/Unsupported platform/);
+ assert.equal((await s.getGuidance('codex')).bullets.length,2);assert.deepEqual(Object.keys((await s.getGuidance('all')).platforms).sort(),['antigravity','codex']);
+});
