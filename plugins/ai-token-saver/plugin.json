@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-token-saver",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Recommend the lowest-cost suitable available OpenAI model and effort from a live guide, with a Revision citation. Guidance updates on use.",
   "author": {
     "name": "Rob Bagley"

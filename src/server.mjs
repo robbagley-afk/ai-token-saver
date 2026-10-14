@@ -7,7 +7,7 @@ const service=createGuidanceService();
 export function createHandler(guidance=service){return async(req,res,body=req.body)=>{
  if(req.method!=='POST'){res.writeHead(405,{'Allow':'POST','Content-Type':'application/json'});res.end(JSON.stringify({jsonrpc:'2.0',error:{code:-32000,message:'Use POST for this stateless MCP server.'},id:null}));return;}
  if(JSON.stringify(body??{}).length>8192){res.writeHead(413);res.end();return;}
- const server=new McpServer({name:'ai-token-saver',version:'0.1.1'});
+ const server=new McpServer({name:'ai-token-saver',version:'0.1.2'});
  const register=(name,description,inputSchema,call)=>server.registerTool(name,{description,inputSchema,annotations},async(args)=>{
   try{const data=await call(args);return {structuredContent:data,content:[{type:'text',text:JSON.stringify(data)}]};}
   catch{return {isError:true,content:[{type:'text',text:'Current guidance could not be returned. Check the platform or try again later. No stale guidance was used.'}]};}
