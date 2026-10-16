@@ -9,6 +9,15 @@ A portable model guidance plugin with a live public guide. The All Platforms edi
 
 Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
 
+## Current releases
+
+Both public editions are at **0.3.1** and require **Best Choice** and **Budget Choice**, each with a full model name and effort. The choices use the actual task's guide rows, allowed platforms, data restrictions, task-specific quality and API benchmark costs. When the guide does not support a distinct second choice, the plugin explains why. API benchmark costs do not measure subscription allowance use.
+
+- [OpenAI-only 0.3.1](https://github.com/robbagley-afk/ai-token-saver/releases/tag/openai-v0.3.1), for ChatGPT and Codex.
+- [All Platforms 0.3.1](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.3.1), for the platforms the user can use.
+
+Release checks passed: 19 automated tests, tracked-source scan, archive CRC and asset SHA256 readback. The hosted service's setup wording was verified live. These checks do not establish fresh-chat recommendation behavior, which remains unverified for the two-choice update. Separate institutional editions use their own account release process and are not included in these releases.
+
 All Platforms install:
 
 ```sh
