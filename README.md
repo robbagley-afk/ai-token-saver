@@ -4,7 +4,7 @@ A portable model guidance plugin with a live public guide. The All Platforms edi
 
 ## Editions
 
-- **AI Token Saver** (`plugins/ai-token-saver`): OpenAI only, for ChatGPT and Codex.
+- **AI Token Saver** (`plugins/ai-token-saver`): Best Choice and Budget Choice within OpenAI, for ChatGPT and Codex.
 - **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): Best Choice and Budget Choice guidance for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It sets up instructions and one every-two-weeks refresh task on each platform the user chooses, from a single setup prompt. Install one edition per client.
 
 Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
