@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-token-saver-all",
-  "version": "0.3.0",
-  "description": "Recommend the lowest-cost suitable model and effort on Claude, ChatGPT, Codex, Gemini or Grok from a live guide, with a Revision citation. Guidance updates on use.",
+  "version": "0.3.1",
+  "description": "Recommend a Best Choice and a Budget Choice on Claude, ChatGPT, Codex, Gemini or Grok from a live guide, with a Revision citation. Guidance updates on use.",
   "author": {
     "name": "Rob Bagley"
   },
@@ -11,7 +11,7 @@
       "interface": {
         "displayName": "AI Token Saver (All Platforms)",
         "shortDescription": "Choose models with less waste, on any platform",
-        "longDescription": "For people who use more than one AI platform. Get a model and effort recommendation for Claude, ChatGPT, Codex, Gemini or Grok from the live Model Value Map. Start with the cheapest suitable listed pick, verify the result and upgrade only after a failed check. One setup prompt adds the guidance to your instructions on each platform and one task per platform that refreshes it every two weeks. Savings depend on the task and are not guaranteed.",
+        "longDescription": "For people who use more than one AI platform. Get a Best Choice and a Budget Choice for your task across the AI platforms you use, based on the live Model Value Map. Compare task-specific evidence and API benchmark cost, verify the result and cite the Revision. One setup prompt adds the guidance to your instructions on each platform and one task per platform that refreshes it every two weeks. Savings depend on the task and are not guaranteed.",
         "developerName": "Rob Bagley",
         "category": "Productivity",
         "logo": "./assets/icon.svg",

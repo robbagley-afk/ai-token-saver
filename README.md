@@ -1,11 +1,11 @@
 # AI Token Saver
 
-A portable ChatGPT/Codex plugin that recommends the cheapest suitable available OpenAI model and effort from a live public guide. It cites the Revision used, leaves model selection to the user, and does not claim guaranteed savings.
+A portable model guidance plugin with a live public guide. The All Platforms edition gives a Best Choice and a Budget Choice for the user's task across the AI platforms they use. It cites the Revision, leaves model selection to the user, and does not claim guaranteed savings.
 
 ## Editions
 
 - **AI Token Saver** (`plugins/ai-token-saver`): OpenAI only, for ChatGPT and Codex.
-- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): the same live guide for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It sets up instructions and one every-two-weeks refresh task on each platform the user chooses, from a single setup prompt. Install one edition per client.
+- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): Best Choice and Budget Choice guidance for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It sets up instructions and one every-two-weeks refresh task on each platform the user chooses, from a single setup prompt. Install one edition per client.
 
 Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
 
@@ -53,7 +53,7 @@ Restart or start a new chat to load installed skills and tools. These commands a
 
 ChatGPT supports **Plugins → Add custom MCP server → No authentication → Create as a plugin** for the deployed HTTPS endpoint shown on the service homepage. A direct MCP connection adds the three tools; the complete package also adds the guidance skill. Edu workspace access depends on administrator policy. A GitHub release does not imply inclusion in OpenAI's public plugin directory.
 
-Invoke AI Token Saver and ask: “Recommend a model and effort for this task. Cite the Revision.” On first use, the skill offers optional setup: one prompt that adds the guidance to your instructions and one refresh task per platform. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
+Invoke AI Token Saver (All Platforms) and describe your task and available platforms. Ask: “Give me a Best Choice and a Budget Choice for this task. Cite the Revision.” On first use, the skill offers optional setup: one prompt that adds the guidance to your instructions and one refresh task per platform. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
 
 ## Updates and the refresh task
 

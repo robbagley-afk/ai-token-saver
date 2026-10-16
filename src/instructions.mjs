@@ -1,6 +1,6 @@
 import {readFile,copyFile,writeFile,rename,unlink} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
-export const BOOTSTRAP = 'When model choice matters, use the installed AI Token Saver plugin to fetch current guidance. Recommend the cheapest suitable available model and effort, explain why, and cite the returned Revision. Do not switch my model. If the plugin is unavailable, say so rather than inventing current guidance. Preserve my other instructions and data restrictions.';
+export const BOOTSTRAP = 'When model choice matters, use the installed AI Token Saver plugin to fetch current guidance. Identify my actual task type first; ask if it is missing. Follow the installed plugin’s recommendation format, explain the task-specific evidence and tradeoff, and cite the returned Revision. Do not switch my model. If the plugin is unavailable, say so rather than inventing current guidance. Preserve my other instructions and data restrictions.';
 const START='<!-- model-guidance:start -->',END='<!-- model-guidance:end -->';
 export function replaceSection(original,block){
  if(typeof original!=='string'||typeof block!=='string'||!block.trim()||block.includes(START)||block.includes(END))throw Error('Invalid instruction block');
