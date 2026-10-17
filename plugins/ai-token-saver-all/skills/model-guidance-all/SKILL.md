@@ -39,7 +39,7 @@ On yes, ask which platforms they use if you do not know, then call `get_setup_pr
 - If you are not the runner, show the prompt unchanged in one code block and say "Paste this into RUNNER" with the app's name. Whatever the runner cannot reach, the prompt hands off to the next app in order, one handoff at a time.
 
 Each platform's own instructions get the block:
-- **Claude:** account instructions on claude.ai (Settings), and ~/.claude/CLAUDE.md for Claude Code.
+- **Claude:** claude.ai > Settings > General > instructions for Claude, and ~/.claude/CLAUDE.md for Claude Code.
 - **ChatGPT:** Settings > Personalization > Custom instructions.
 - **Codex:** ~/.codex/AGENTS.md.
 - **Gemini or Antigravity:** the Gemini app's Settings, saved info, and ~/.gemini/GEMINI.md for Gemini CLI or Antigravity.

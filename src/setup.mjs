@@ -3,7 +3,7 @@
 export const RUNNER_ORDER=Object.freeze(['claude','codex','antigravity','chatgpt','grok']);
 const NAMES={claude:'Claude',codex:'Codex',antigravity:'Gemini or Antigravity',chatgpt:'ChatGPT',grok:'Grok'};
 const SURFACES={
- claude:'Claude account instructions on claude.ai, Settings. Claude Code file ~/.claude/CLAUDE.md.',
+ claude:'claude.ai > Settings > General > instructions for Claude. Claude Code file ~/.claude/CLAUDE.md.',
  codex:'File ~/.codex/AGENTS.md (Windows %USERPROFILE%\\.codex\\AGENTS.md).',
  antigravity:'Gemini CLI or Antigravity file ~/.gemini/GEMINI.md, or the global rules file that client documents. Gemini app: Settings, saved info.',
  chatgpt:'Settings > Personalization > Custom instructions.',
