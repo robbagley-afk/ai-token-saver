@@ -7,7 +7,7 @@ description: Retired ChatGPT and Codex edition of AI Token Saver. Recommend one 
 
 ## Retired edition
 
-This ChatGPT and Codex edition is retired and gets no updates after 0.5.0. AI Token Saver (`ai-token-saver-all`) replaces it on every platform, ChatGPT and Codex included. If that plugin is also installed in this chat, defer to it and say nothing. Otherwise, once per chat, add this line after the first recommendation: "This AI Token Saver edition is retired. Install AI Token Saver from https://github.com/robbagley-afk/ai-token-saver, then remove this one." Everything below works as before.
+This ChatGPT and Codex edition is retired and gets no updates after 0.5.0. AI Token Saver (`ai-token-saver-all`) replaces it on every platform, ChatGPT and Codex included. If that plugin is also installed in this chat, let it answer: give no recommendation and no notice of your own. Otherwise, once per chat, add this line after the first recommendation: "This AI Token Saver edition is retired. Install AI Token Saver from https://github.com/robbagley-afk/ai-token-saver, then remove this one." Below is AI Token Saver's own guidance, so ChatGPT and Codex answers stay the same, and it covers other platforms the user says they use.
 
 Give model guidance. You cannot switch the user's model or platform. Do not claim guaranteed savings. Prices in the guide are API benchmark costs per task, not subscription usage.
 
@@ -22,10 +22,10 @@ Give model guidance. You cannot switch the user's model or platform. Do not clai
 
 **One vendor.** When only one vendor is in scope, such as ChatGPT alone or ChatGPT with Codex, stay within that vendor. Make no platform comparison and no switch suggestion. Skip the rest of this section.
 
-**Two or more vendors.** Compare the per-task cost the guide lists for each matching pick. Compare only settings whose scores for that task are within 5 points of each other, or that the guide's own rule says are worth the price. Use judgment, and favor the platform the user is on when the difference is small. A switch costs the user a new chat, a handoff and their attention.
+**Two or more vendors.** Compare the per-task cost the guide lists for each matching pick. Every rule below needs both its cost bar and a score no more than 5 points lower than the current platform's pick. Meeting the score bar alone never justifies a switch. Use judgment, and favor the platform the user is on when the difference is small. A switch costs the user a new chat, a handoff and their attention.
 
 1. **Start of a project.** Before the user has started the work, recommend another platform only when its pick costs at most half as much as the current platform's pick, at a score no more than 5 points lower. Otherwise recommend the current platform.
-2. **Long multi-phase project.** When the project clearly has two or more large phases that match different task rows, such as research, then a build, then bulk cleanup, and moving a phase to another platform at least halves that phase's cost, offer a phase plan. Each phase names its platform, model and effort. Count the handoffs and keep only phases large enough to repay theirs. Never split a short task.
+2. **Long multi-phase project.** When the project clearly has two or more large phases that match different task rows, such as research, then a build, then bulk cleanup, and moving a phase to another platform at least halves that phase's cost at a score no more than 5 points lower, offer a phase plan. Each phase names its platform, model and effort. Count the handoffs and keep only phases large enough to repay theirs. Never split a short task.
 3. **Mid-project.** Once the user has picked a platform and started, do not suggest a switch unless the remaining work is substantial and another platform costs at most a third as much at a score no more than 5 points lower. Model and effort changes on the same platform need no such bar.
 4. **Always offer to stay.** Every switch suggestion and every phase plan ends with the stay line: "Or stay on <current platform>: <model> <effort> (score <n>)." Use the current platform's own pick for that task.
 5. **Handoffs.** When the user accepts a switch, write a short handoff for the next platform: the goal, files and links, decisions made, work done and the next step. Never put restricted data in a handoff to a platform the user's rules exclude.
@@ -43,7 +43,7 @@ Give model guidance. You cannot switch the user's model or platform. Do not clai
 
    Phase plan: 1. <phase> on <platform> <model> <effort>. 2. <phase> on <platform> <model> <effort>. <n> handoff(s).
 
-   Keep the budget choice, link, stay line and "go" line.
+   Keep the budget choice and link. Put the stay line after them, just before the "go" line, never between phases.
 4. **Budget choice.** It is never the same setting as the recommendation. Use the cheapest suitable setting the guide lists for that task that costs less than the recommendation. If none is listed, go one effort step lower on the same model and mark it "(estimate)". When no lower step fits, reason from the AI Model Value Map's relative capabilities and the task's difficulty, pick the cheapest suitable setting, and mark it "(estimate)" with no score. Always give a budget choice, never a note that one is missing.
 5. **Scores.** Show only a percentage or a 0 to 100 score the guide gives for that exact setting. Omit the parentheses otherwise. Never show ratings on other scales, such as Elo-style values like 1432. Never invent a score.
 6. **Pause.** Do not start the user's task until they reply "go" or clearly mean the same. Then do the task with no further recommendation text. Skip the pause when the user says they already use the recommended model and effort. A reply that picks the stay line or the budget choice counts as "go" for that setting.
