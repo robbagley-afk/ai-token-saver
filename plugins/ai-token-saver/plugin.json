@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-token-saver",
-  "version": "0.3.1",
-  "description": "Recommend a Best Choice and a Budget Choice of OpenAI model and effort from a live guide, with a Revision citation. Guidance updates on use.",
+  "version": "0.4.0",
+  "description": "Recommend one exact OpenAI model and effort, plus a budget choice, from a live guide. Guidance updates on use.",
   "author": {
     "name": "Rob Bagley"
   },
@@ -11,12 +11,12 @@
       "interface": {
         "displayName": "AI Token Saver",
         "shortDescription": "Choose models with less waste",
-        "longDescription": "Get a task-specific Best Choice and Budget Choice of OpenAI model and effort from the live Model Value Map. Compare task-specific quality and API benchmark cost, explain the tradeoff and cite the full Revision. Guidance refreshes when used. Optional setup follows this edition\u2019s existing instructions. Savings depend on the task and are not guaranteed.",
+        "longDescription": "Get a short, task-specific recommendation of one OpenAI model and effort, plus a budget choice, from the live Model Value Map. Ask for detail to see the tradeoff and the full Revision. Guidance refreshes when used. Optional setup updates your ChatGPT or Codex instructions and adds a monthly refresh task. Savings depend on the task and are not guaranteed.",
         "developerName": "Rob Bagley",
         "category": "Productivity",
         "logo": "./assets/icon.svg",
         "composerIcon": "./assets/icon.svg",
-        "defaultPrompt": "Recommend a model and effort for my task using current guidance. Cite the Revision."
+        "defaultPrompt": "Recommend a model and effort for my task using current guidance."
       }
     }
   }

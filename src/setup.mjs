@@ -3,7 +3,7 @@
 export const RUNNER_ORDER=Object.freeze(['claude','codex','antigravity','chatgpt','grok']);
 const NAMES={claude:'Claude',codex:'Codex',antigravity:'Gemini or Antigravity',chatgpt:'ChatGPT',grok:'Grok'};
 const SURFACES={
- claude:'Claude Code file ~/.claude/CLAUDE.md. Claude app: Settings, the personal instructions box for the account.',
+ claude:'claude.ai > Settings > General > instructions for Claude. Claude Code file ~/.claude/CLAUDE.md.',
  codex:'File ~/.codex/AGENTS.md (Windows %USERPROFILE%\\.codex\\AGENTS.md).',
  antigravity:'Gemini CLI or Antigravity file ~/.gemini/GEMINI.md, or the global rules file that client documents. Gemini app: Settings, saved info.',
  chatgpt:'Settings > Personalization > Custom instructions.',
@@ -28,12 +28,13 @@ Call get_instruction_block twice for your platform, mode bootstrap and mode snap
 <!-- model-guidance:end -->
 Where it goes:
 ${order.map(p=>`- ${NAMES[p]}: ${SURFACES[p]}`).join('\n')}
-For a file: confirm the real path, back it up, replace only the one marked section or add it at the end, keep every other byte, show the diff, read it back. Stop on duplicated or malformed markers. If a sync tool or an organization owns the file, give me the text and change nothing. For an account setting: give me the text and the menu path, and mark it done only after I confirm I saved it.
+For a file: confirm the real path, back it up, replace only the one marked section or add it at the end, keep every other byte, show the diff, read it back. Stop on duplicated or malformed markers. If a sync tool or an organization owns the file, give me the text and change nothing. For an account setting: open the settings page in the in-app browser and ask me to sign in to my own account there. Never type, request or store passwords, codes or tokens. Confirm the signed-in account on the page, replace only the marked block, and read it back. If a page has a character limit, shorten the block, never my own text. With no in-app browser, give me the text and the menu path, and mark it done only after I confirm I saved it.
 
 Step 2. Scheduled task for your own platform.
+After a confirmed save, ask: "Would you like me to set up a scheduled task so your instructions stay updated with the best model recommendations as new models are released?" Continue only on yes.
 List this platform's existing scheduled tasks first. Sort them into: consumer tasks that check or refresh model guidance in instructions, publisher tasks that research or publish a guide, and unrelated tasks. Never change publisher or unrelated tasks. Show me the consumer tasks. Keep only one active: reuse the best match, and pause the other consumer tasks after one yes from me. Pause, do not delete.
-The one task: name "${TASK_NAME}", every two weeks, Saturday at 10:00 PM in my local timezone. If this scheduler has no two-week option, use every Saturday at 10:00 PM and have the task exit unless 14 days have passed since its last full run. Say which you used. A scheduler that lives only in this chat or expires within days does not count: say so and give me the task prompt.
-Task prompt: "${TASK_NAME} for PLATFORM. Call get_guidance for PLATFORM, sending only the platform. Read the Revision inside the model-guidance block of my instructions. If it matches, stay quiet. If it changed and the block is in a file on this computer that I approved at setup: back the file up, replace only the marked section with the bootstrap text plus the new snapshot from get_instruction_block, read it back, and report the old and new Revision. If the block is in an account setting: send me the replacement text and the menu path. Never edit outside the markers, switch models, create or change another task, or research or publish a guide. If the plugin is unavailable, report it and change nothing."
+The one task: name "${TASK_NAME}", 1:00 PM in my local timezone on the first Tuesday of each month, so I can be present. If this scheduler has no monthly-weekday option, run every Tuesday at 1:00 PM and have the task exit unless the date is the 1st through the 7th. Say which you used. Reuse an older every-two-weeks refresh task as the best match and change its schedule. A scheduler that lives only in this chat or expires within days does not count: say so and give me the task prompt.
+Task prompt: "${TASK_NAME} for PLATFORM. Call get_guidance for PLATFORM, sending only the platform, and build the new block from get_instruction_block, bootstrap plus snapshot. For each instructions page or file approved at setup: if the block is in a file on this computer, back the file up first. If it is an account setting, open the page in the in-app browser and ask me to sign in if needed. Replace only the marked block, read it back, and report what changed with the old and new Revision, or say nothing changed. Never edit outside the markers, switch models, create or change another task, or research or publish a guide. If the plugin is unavailable, report it and change nothing."
 Replace PLATFORM before saving. Read the saved task back: name, schedule, timezone, status.
 ${many?`
 Step 3. The other platforms, from here.
@@ -44,6 +45,6 @@ If any platform is not finished and verified, write one handoff prompt for the n
 `:''}
 Report one line per platform: instructions UPDATED, PASTE NEEDED or SKIPPED, and task CREATED, REUSED, PROMPT ONLY or SKIPPED, with the schedule you saved and any tasks you paused.
 
-Rules: only one active consumer task per platform. No scheduled run edits account settings. Do not install anything else. If a step fails, show the error and stop that platform.`;
- return {platforms:order,order,runner,task_name:TASK_NAME,schedule:'Every two weeks, Saturday 10:00 PM local time',prompt};
+Rules: only one active consumer task per platform. A scheduled run edits account settings only in an interactive session where I sign in. Do not install anything else. If a step fails, show the error and stop that platform.`;
+ return {platforms:order,order,runner,task_name:TASK_NAME,schedule:'First Tuesday of each month, 1:00 PM local time',prompt};
 }

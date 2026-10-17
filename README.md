@@ -1,36 +1,26 @@
 # AI Token Saver
 
-A portable model guidance plugin with a live public guide. The All Platforms edition gives a Best Choice and a Budget Choice for the user's task across the AI platforms they use. It cites the Revision, leaves model selection to the user, and does not claim guaranteed savings.
+A portable model guidance plugin with a live public guide. Each edition gives one exact model and effort plus a budget choice for the user's task, in a short answer. It cites the Revision on request, leaves model selection to the user, and does not claim guaranteed savings.
 
 ## Editions
 
-- **AI Token Saver** (`plugins/ai-token-saver`): Best Choice and Budget Choice within OpenAI, for ChatGPT and Codex.
-- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): Best Choice and Budget Choice guidance for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It sets up instructions and one every-two-weeks refresh task on each platform the user chooses, from a single setup prompt. Install one edition per client.
+- **AI Token Saver** (`plugins/ai-token-saver`): A recommendation and a budget choice within OpenAI, for ChatGPT and Codex.
+- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): A recommendation and a budget choice for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It offers to update each platform's own instructions in the in-app browser and to add one monthly refresh task. Install one edition per client.
 
 Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
 
 ## Current releases
 
-Both public editions are at **0.3.1** and require **Best Choice** and **Budget Choice**, each with a full model name and effort. The choices use the actual task's guide rows, allowed platforms, data restrictions, task-specific quality and API benchmark costs. When the guide does not support a distinct second choice, the plugin explains why. API benchmark costs do not measure subscription allowance use.
+Both public editions are at **0.4.0**.
 
-- [OpenAI-only 0.3.1](https://github.com/robbagley-afk/ai-token-saver/releases/tag/openai-v0.3.1), for ChatGPT and Codex.
-- [All Platforms 0.3.1](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.3.1), for the platforms the user can use.
+- First answers use one template: "Recommendation: <model> <effort> (score <n>). Low on tokens? Budget choice: … Want more detail? See the AI Model Value Map." Then the plugin waits for "go" before starting the task.
+- When the guide lists no budget setting, the plugin estimates one and marks it "(estimate)". Scores appear only as percentages or 0 to 100.
+- Setup offers the in-app browser and edits each platform's own instructions after the user signs in. The refresh task runs at 1:00 PM local time on the first Tuesday of each month.
 
-Release checks passed: 19 automated tests, tracked-source scan, archive CRC and asset SHA256 readback. The hosted service's setup wording was verified live. These checks do not establish fresh-chat recommendation behavior, which remains unverified for the two-choice update. Separate institutional editions use their own account release process and are not included in these releases.
+- [OpenAI-only 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/openai-v0.4.0), for ChatGPT and Codex.
+- [All Platforms 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.4.0), for the platforms the user can use.
 
-All Platforms install:
-
-```sh
-# Claude Code
-/plugin marketplace add robbagley-afk/ai-token-saver
-/plugin install ai-token-saver-all@ai-token-saver
-
-# Codex
-codex plugin marketplace add robbagley-afk/ai-token-saver
-codex plugin add ai-token-saver-all@ai-token-saver
-```
-
-Any other MCP client: add `https://ai-token-saver.vercel.app/mcp` as a Streamable HTTP server with no authentication. That gives the four tools without the skill. Tested hosts are listed in the release notes. Other hosts are untested.
+Separate institutional editions use their own account release process and are not included in these releases.
 
 ## Install by pasting a prompt
 
@@ -62,7 +52,7 @@ Restart or start a new chat to load installed skills and tools. These commands a
 
 ChatGPT supports **Plugins → Add custom MCP server → No authentication → Create as a plugin** for the deployed HTTPS endpoint shown on the service homepage. A direct MCP connection adds the three tools; the complete package also adds the guidance skill. Edu workspace access depends on administrator policy. A GitHub release does not imply inclusion in OpenAI's public plugin directory.
 
-Invoke AI Token Saver (All Platforms) and describe your task and available platforms. Ask: “Give me a Best Choice and a Budget Choice for this task. Cite the Revision.” On first use, the skill offers optional setup: one prompt that adds the guidance to your instructions and one refresh task per platform. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
+Invoke AI Token Saver (All Platforms) and describe your task and available platforms. Ask which model and effort fit it. After the first recommendation, the skill offers to update your instructions in the in-app browser, then to add one monthly refresh task. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
 
 ## Updates and the refresh task
 
@@ -70,9 +60,9 @@ The skill calls `get_guidance` on each invocation. Validated upstream guidance i
 
 Setup is optional and runs from one prompt. The skill asks which platforms the user has and calls `get_setup_prompt`. The prompt names the app to run it in: the one most able to change the others on the same computer, an agent with a shell first and chat-only apps last. That run sets up every platform it can reach and verify. For the rest it cascades: each app finishes its own platform and writes the handoff prompt for the next.
 
-Per platform the prompt installs one instruction block between `model-guidance` markers (a stable pointer plus a dated snapshot with its Revision) and one scheduled task, "AI Token Saver guidance refresh", every two weeks on Saturday at 10:00 PM local time. The task refreshes the marked block in an approved local instruction file when the Revision changes, and sends replacement text for account settings it cannot edit.
+Per platform the prompt installs one instruction block between `model-guidance` markers (a stable pointer plus a dated snapshot with its Revision) and one scheduled task, "AI Token Saver guidance refresh", at 1:00 PM local time on the first Tuesday of each month, so the user can be present. Each run reads the live guide, opens each instructions page, asks the user to sign in if needed, replaces only the marked block and reads it back. A scheduled run edits account settings only in an interactive session where the user signs in.
 
-Before creating the task the prompt lists existing scheduled tasks and keeps only one consumer task active per platform. Other guidance-refresh tasks are paused after the user confirms, never deleted. Tasks that research or publish a guide are never touched. If the scheduler has no two-week option, the task runs every Saturday and exits unless 14 days have passed. If no durable scheduler exists, the prompt says no task was created.
+Before creating the task the prompt lists existing scheduled tasks and keeps only one consumer task active per platform. Other guidance-refresh tasks, including the older every-two-weeks task, are paused after the user confirms, never deleted. Tasks that research or publish a guide are never touched. If the scheduler has no monthly-weekday option, the task runs every Tuesday and exits unless the date is the 1st through the 7th. If no durable scheduler exists, the prompt says no task was created.
 
 ## Public tools
 
