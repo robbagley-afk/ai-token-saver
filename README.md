@@ -1,24 +1,27 @@
 # AI Token Saver
 
-A portable model guidance plugin with a live public guide. Each edition gives one exact model and effort plus a budget choice for the user's task, in a short answer. It cites the Revision on request, leaves model selection to the user, and does not claim guaranteed savings.
+A portable model guidance plugin with a live public guide. It gives one exact model and effort plus a budget choice for the user's task, in a short answer. It cites the Revision on request, leaves model selection to the user, and does not claim guaranteed savings.
 
-## Editions
+## The plugin
 
-- **AI Token Saver** (`plugins/ai-token-saver`): A recommendation and a budget choice within OpenAI, for ChatGPT and Codex.
-- **AI Token Saver (All Platforms)** (`plugins/ai-token-saver-all`): A recommendation and a budget choice for Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok. It offers to update each platform's own instructions in the in-app browser and to add one monthly refresh task. Install one edition per client.
+**AI Token Saver** (`plugins/ai-token-saver-all`) is the one public plugin. It covers Claude, ChatGPT, Codex, Gemini (Antigravity) and Grok, limited to the platforms the user says they have.
 
-Both editions use the same read-only server. `get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
+- **ChatGPT alone, or ChatGPT with Codex:** it stays within OpenAI, with no platform comparison, the same as the former ChatGPT and Codex edition.
+- **More than one vendor:** it compares the per-task cost of each platform's pick. At the start of a project it suggests another platform only when that pick costs at most half as much at a score no more than 5 points lower. For a long project with phases that match different task types, it can propose a phase plan with a handoff count. Mid-project it suggests a switch only at a third of the cost or less. Every suggestion ends with "Or stay on <current platform>: …".
+- Setup offers the in-app browser and edits each platform's own instructions after the user signs in. The refresh task runs at 1:00 PM local time on the first Tuesday of each month.
+
+`get_guidance` accepts `chatgpt`, `codex`, `claude`, `antigravity`, `grok` or `all`. Local-model rows and the cross-vendor best-value table are never returned.
+
+### Retired: ChatGPT and Codex edition
+
+`plugins/ai-token-saver` (AI Token Saver, OpenAI only) is retired as of 0.5.0. Its 0.5.0 skill is generated from the multiplatform skill by `scripts/build-retired-skill.mjs` and adds a one-line notice that asks the user to install AI Token Saver and remove the old edition. It stays in the Codex marketplace for one release so existing installs keep working, and is removed in 0.6.0. No new `openai-v*` releases are cut. ChatGPT users who uploaded the OpenAI package install the AI Token Saver package and then remove the old plugin.
 
 ## Current releases
 
-Both public editions are at **0.4.0**.
+The latest public releases are **0.4.0**. 0.5.0, the single multiplatform plugin, is not released yet.
 
-- First answers use one template: "Recommendation: <model> <effort> (score <n>). Low on tokens? Budget choice: … Want more detail? See the AI Model Value Map." Then the plugin waits for "go" before starting the task.
-- When the guide lists no budget setting, the plugin estimates one and marks it "(estimate)". Scores appear only as percentages or 0 to 100.
-- Setup offers the in-app browser and edits each platform's own instructions after the user signs in. The refresh task runs at 1:00 PM local time on the first Tuesday of each month.
-
-- [OpenAI-only 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/openai-v0.4.0), for ChatGPT and Codex.
-- [All Platforms 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.4.0), for the platforms the user can use.
+- [All Platforms 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.4.0)
+- [OpenAI-only 0.4.0](https://github.com/robbagley-afk/ai-token-saver/releases/tag/openai-v0.4.0), the last release of the retired edition.
 
 Separate institutional editions use their own account release process and are not included in these releases.
 
@@ -26,8 +29,7 @@ Separate institutional editions use their own account release process and are no
 
 Paste one of these into the AI app you want it installed in. An app with a terminal installs and verifies it. A chat app without a terminal replies with the exact clicks.
 
-- All Platforms edition: [install/all-platforms.md](install/all-platforms.md)
-- ChatGPT and Codex edition: [install/chatgpt-codex.md](install/chatgpt-codex.md)
+- [install/all-platforms.md](install/all-platforms.md), for every platform. [install/chatgpt-codex.md](install/chatgpt-codex.md) now points there.
 
 Tested: the All Platforms prompt installed the plugin from this repository in a headless Claude Code chat. The Codex and chat-app paths are untested.
 
@@ -39,20 +41,20 @@ MCP endpoint: https://ai-token-saver.vercel.app/mcp (Streamable HTTP, no authent
 
 Use your client's normal plugin interface to install the release package. No local server, inference runtime, special browser profile, Microsoft account, or scheduler is needed. Workspace administrators can control installation and tool availability.
 
-For a supported Codex repo marketplace, this repository contains `.agents/plugins/marketplace.json`, pointing to `plugins/ai-token-saver`. Register the repository with the documented `codex plugin marketplace add robbagley-afk/ai-token-saver` command, then install AI Token Saver through the desktop plugin interface. Confirm support with your installed client's help. Marketplace registration alone is not installation.
+For a supported Codex repo marketplace, this repository contains `.agents/plugins/marketplace.json`, pointing to `plugins/ai-token-saver-all`. Register the repository with the documented `codex plugin marketplace add robbagley-afk/ai-token-saver` command, then install AI Token Saver through the desktop plugin interface. Confirm support with your installed client's help. Marketplace registration alone is not installation.
 
 On clients that expose the verified CLI install command, run:
 
 ```sh
 codex plugin marketplace add robbagley-afk/ai-token-saver
-codex plugin add ai-token-saver@ai-token-saver
+codex plugin add ai-token-saver-all@ai-token-saver
 ```
 
 Restart or start a new chat to load installed skills and tools. These commands are a convenience for Codex users who already have its CLI, not a requirement for ChatGPT users.
 
 ChatGPT supports **Plugins → Add custom MCP server → No authentication → Create as a plugin** for the deployed HTTPS endpoint shown on the service homepage. A direct MCP connection adds the three tools; the complete package also adds the guidance skill. Edu workspace access depends on administrator policy. A GitHub release does not imply inclusion in OpenAI's public plugin directory.
 
-Invoke AI Token Saver (All Platforms) and describe your task and available platforms. Ask which model and effort fit it. After the first recommendation, the skill offers to update your instructions in the in-app browser, then to add one monthly refresh task. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
+Invoke AI Token Saver and describe your task and the platforms you use. Ask which model and effort fit it. After the first recommendation, the skill offers to update your instructions in the in-app browser, then to add one monthly refresh task. Each step is opt-in. The plugin cannot switch your model, save ChatGPT settings, or guarantee activation on every prompt.
 
 ## Updates and the refresh task
 

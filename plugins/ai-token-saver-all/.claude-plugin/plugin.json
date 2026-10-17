@@ -1,7 +1,7 @@
 {
   "name": "ai-token-saver-all",
-  "version": "0.4.0",
-  "description": "Recommend one exact model and effort, plus a budget choice, on Claude, ChatGPT, Codex, Gemini or Grok from a live guide. Optional setup adds each platform's instructions and a monthly refresh task.",
+  "version": "0.5.0",
+  "description": "Recommend one exact model and effort, plus a budget choice, on the AI platforms you use (Claude, ChatGPT, Codex, Gemini or Grok) from a live guide. Suggests a cheaper platform only when the savings are large. Optional setup adds each platform's instructions and a monthly refresh task.",
   "author": {
     "name": "Rob Bagley"
   },
