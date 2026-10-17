@@ -5,10 +5,10 @@
  },
  "plugins": [
   {
-   "name": "ai-token-saver",
+   "name": "ai-token-saver-all",
    "source": {
     "source": "local",
-    "path": "./plugins/ai-token-saver"
+    "path": "./plugins/ai-token-saver-all"
    },
    "policy": {
     "installation": "AVAILABLE",
@@ -17,10 +17,10 @@
    "category": "Productivity"
   },
   {
-   "name": "ai-token-saver-all",
+   "name": "ai-token-saver",
    "source": {
     "source": "local",
-    "path": "./plugins/ai-token-saver-all"
+    "path": "./plugins/ai-token-saver"
    },
    "policy": {
     "installation": "AVAILABLE",

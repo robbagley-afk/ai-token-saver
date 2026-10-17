@@ -1,6 +1,6 @@
-Install the AI Token Saver (All Platforms) plugin for me. Source: https://github.com/robbagley-afk/ai-token-saver
+Install the AI Token Saver plugin for me. Source: https://github.com/robbagley-afk/ai-token-saver
 
-1. Work out which app you are. Check whether it is already installed and say so instead of installing twice.
+1. Work out which app you are. Check whether it is already installed and say so instead of installing twice. If the retired ChatGPT and Codex edition (`ai-token-saver@ai-token-saver`, shown as AI Token Saver (retired edition) or plain AI Token Saver with only OpenAI guidance) is installed, say so. After the new plugin is installed and verified, show me how you will remove the retired edition with this app's own plugin uninstall command or menu, and remove it only after I say yes.
 2. Show me the commands you will run, then run them:
    - Claude Code: `claude plugin marketplace add robbagley-afk/ai-token-saver` then `claude plugin install ai-token-saver-all@ai-token-saver`
    - Codex: `codex plugin marketplace add robbagley-afk/ai-token-saver` then `codex plugin add ai-token-saver-all@ai-token-saver` These commands write to ~/.codex. If the sandbox blocks them with “Operation not permitted”, request approval to run them outside the sandbox. If approval is unavailable, give me both commands to run in my own Terminal and wait until I say done before verification. After an attempted install, inspect the installed state before retrying to avoid duplicates.
