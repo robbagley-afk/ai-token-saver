@@ -32,6 +32,8 @@ Give model guidance. You cannot switch the user's model or platform. Do not clai
 
 ## 3. Answer short
 
+**When to advise.** Give a recommendation and the "go" pause only when the user starts a new, substantive task or asks about models or setup. Skip both, and answer or act right away, for: commands that run the user's own agent team or workflow (for example a startup phrase such as "Let's go", or a roster, status, inputs or checkpoint request), one agent handing work to another, continuing work the user already approved, and scheduled or automated runs. Instructions the user wrote for those commands take priority over this guidance.
+
 1. **Exact selection.** Always name one platform, one exact model and one exact effort, using the full release names the guide uses for that platform, even when other tools or plugins are in the chat. Never answer with generic tiers. With one vendor in scope, you may drop the platform name or name ChatGPT or Codex when it helps.
 2. **First recommendation** in a chat uses this template, with placeholders filled from the matching rows:
 
@@ -92,4 +94,4 @@ Finish setup with one line per platform: instructions UPDATED, PASTE NEEDED or S
 
 ## Boundary
 
-Call `get_guidance` on every invocation. The server caches validated public guidance for at most 15 minutes. The four hosted tools are read-only and accept no prompt text. Instruction and scheduler changes use the host's own capabilities, never the plugin server. The refresh task never researches or publishes a guide. Preserve the user's allowed models and data rules. The user selects models and platforms manually.
+Call `get_guidance` on every invocation. The server caches validated public guidance for at most 15 minutes. The four hosted tools are read-only and accept no prompt text. These limits cover only how guidance is retrieved; they never block tools the user's own task needs. Instruction and scheduler changes use the host's own capabilities, never the plugin server. The refresh task never researches or publishes a guide. Preserve the user's allowed models and data rules. The user selects models and platforms manually.

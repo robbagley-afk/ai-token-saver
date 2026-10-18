@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-token-saver",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Retired. Use AI Token Saver (ai-token-saver-all), which covers ChatGPT and Codex. This edition keeps working until you switch.",
   "author": {
     "name": "Rob Bagley"

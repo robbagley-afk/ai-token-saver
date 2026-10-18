@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.4',f);
+test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.5',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
@@ -44,3 +44,5 @@ test('0.5.3 sign-in uses "go" and no page opens before "go"',async()=>{for(const
  for(const need of ['then type "go" when you\'re ready." Wait for "go".','Do not open any page or browser, or start any setup step, until then.'])assert.ok(s.includes(need),`${f}: ${need}`);
  assert.ok(!s.includes('say they are signed in'),`${f}: old sign-in wording`);assert.ok(s.includes('never close it. If it closed, reopen the page'),f);assert.ok(s.includes('If that\'s the account to update, type "go".'),f);}});
 test('0.5.4 scheduled task uses the setup-model pick',async()=>{for(const f of skills){const s=await readFile(f,'utf8');assert.ok(s.includes('Give the task the same model and effort as the setup-model line'),f);}});
+test('0.5.5 advice scope: office commands, handoffs, continuations and scheduled runs get no recommendation; retrieval limits never block task tools',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
+ for(const need of ['**When to advise.**','a startup phrase such as "Let\'s go"','continuing work the user already approved, and scheduled or automated runs','Instructions the user wrote for those commands take priority','they never block tools the user\'s own task needs'])assert.ok(s.includes(need),`${f}: ${need}`);}});
