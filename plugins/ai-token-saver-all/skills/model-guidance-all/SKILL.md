@@ -58,15 +58,15 @@ On yes, ask which platforms they use if you do not know, then call `get_setup_pr
 - If you are not the runner, show the prompt unchanged in one code block and say "Paste this into RUNNER" with the app's name. Whatever the runner cannot reach, the prompt hands off to the next app in order, one handoff at a time.
 
 Each platform's own instructions get the block:
-- **Claude:** claude.ai > Settings > General > instructions for Claude, and ~/.claude/CLAUDE.md for Claude Code.
+- **Claude:** claude.ai > Settings > Account > Instructions for Claude, and ~/.claude/CLAUDE.md for Claude Code.
 - **ChatGPT:** Settings > Personalization > Custom instructions.
 - **Codex:** ~/.codex/AGENTS.md. Confirm the account, the machine and the real file first. Repository instructions are a separate layer and stay untouched.
 - **Gemini or Antigravity:** the Gemini app's Settings, saved info, and ~/.gemini/GEMINI.md for Gemini CLI or Antigravity.
 - **Grok:** Settings, custom instructions.
 
 Rules for every page and file:
-- **Sign-in.** Open the settings page in the in-app browser and ask the user to sign in to their own account there. Never type, request or store passwords, codes or tokens. Confirm the signed-in account on the page before editing.
-- **Markers.** Edit only the block between `<!-- model-guidance:start -->` and `<!-- model-guidance:end -->`. Read it back. If a page has a character limit, shorten the block, never the user's own text.
+- **Sign-in.** Open the settings page in the in-app browser right away. Do not ask which account or address to use first: most users have one. If the page is signed out, ask the user to sign in to their own account there and wait until they say they are signed in. Never type, request or store passwords, codes or tokens. Read the account the page shows and confirm it with the user before editing.
+- **Markers.** If `<!-- model-guidance:start -->` and `<!-- model-guidance:end -->` each appear once, start first, edit only the block between them. If either is duplicated, reversed or missing its partner, stop and ask the user how to proceed. If neither appears, look for an older section the user wrote about which model, effort or thinking setting to use, such as "Model, effort, and thinking". If you find one, quote its first and last lines and ask once: "Your instructions already have an AI model and effort section. Replace it with the AI Token Saver block? Everything else stays as it is." On yes, replace exactly that section with the marked block. On no, add the marked block at the end and leave that section alone. If there is no such section, add the marked block at the end without asking. Never change any other text the user wrote. Read the result back. If a page has a character limit, shorten the block, never the user's own text.
 - **Files.** Edit a local instruction file only after a yes for that file. Back it up, change only the marked section, keep every other byte, show the diff, read it back. Stop on duplicated or malformed markers. If a sync process or an organization owns the file, hand over the text and change nothing.
 
 ## 5. Offer the scheduled refresh
