@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.1',f);
+test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.2',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
@@ -31,3 +31,7 @@ test('homepage carries the one install prompt verbatim and no retired-edition pr
 test('0.5.1 setup: missing-marker handling, no account question, Claude Account path',async()=>{const s=await readFile(SOURCE,'utf8');
  for(const need of ['"Your instructions already have an AI model and effort section. Replace it with the AI Token Saver block? Everything else stays as it is."','Do not ask which account or address to use first','If there is no such section, add the marked block at the end without asking.','claude.ai > Settings > Account > Instructions for Claude'])assert.ok(s.includes(need),need);
  assert.ok(!s.includes('Settings > General > instructions for Claude'));assert.ok(!/Institution accounts|@byu|@ensign/.test(s));});
+test('0.5.2 setup model: host browser-work pick before setup, "go" to start, step-up on a failed check',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
+ for(const need of ['**Setup model.**','"Recommended: <model> <effort>. Select it in the model picker, then type "go"."','"Computer use and browser work" pick','Start setup only when the user replies "go"','the "Computer use and browser work" upgrade, or when that row lists none, the "Scripted relays and tool workflows" pick','Never switch the model yourself.','A scheduled refresh run skips this step.','After "go", ask which platforms they use'])assert.ok(s.includes(need),`${f}: ${need}`);
+ assert.ok(s.indexOf('**Setup model.**')<s.indexOf('`get_setup_prompt`'),`${f}: setup model comes before get_setup_prompt`);
+ assert.ok(!/Sol low|Sol Light/i.test(s),`${f}: no Sol low setup pick`);}});
