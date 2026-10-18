@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import {rea
 import {buildRetiredSkill,SOURCE,TARGET} from '../scripts/build-retired-skill.mjs';
 const skills=[TARGET,SOURCE];
 const manifests=['plugins/ai-token-saver/plugin.json','plugins/ai-token-saver-all/plugin.json','plugins/ai-token-saver-all/.claude-plugin/plugin.json'];
-test('both skills carry the short template, pause, estimate, setup offer, sign-in and monthly refresh',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
+test('both skills carry the short template, pause, estimate, setup offer, sign-in and monthly refresh',async()=>{for(const f of skills){const full=await readFile(f,'utf8'),s=full.replace(/^- \*\*Institution accounts\.\*\*.*$/m,'');
  for(const need of ['Low on tokens? Budget choice:','[AI Model Value Map](https://robbagley-afk.github.io/model-value-map/)','Type "go" when the model and effort are selected.','Recommended: <','(estimate)','never the same model and effort as the recommendation','is not a task','Always give a budget choice','1432','Would you like me to use the in-app browser to update your instructions so they always recommend the most efficient model and effort?','Never type, request or store passwords, codes or tokens','<!-- model-guidance:start -->','<!-- model-guidance:end -->','Would you like me to set up a scheduled task so your instructions stay updated with the best model recommendations as new models are released?','AI Token Saver guidance refresh','1:00 PM local time on the first Tuesday of each month','A scheduled run edits account settings only in an interactive session where the user signs in.'])assert.ok(s.includes(need),`${f}: ${need}`);
  for(const gone of [/every two weeks,? Saturday/i,/Saturday (?:at )?10:00 PM/i,/never edits account settings/i,/Ensign|\bCES\b|ChatGPT Edu|LM Studio|Coding Helper|FERPA/i,/Best Choice/,/not listed/i])assert.ok(!gone.test(s),`${f}: ${gone}`);}});
 test('one vendor stays within that vendor, the ChatGPT-only behavior of the retired edition',async()=>{const s=await readFile(SOURCE,'utf8');
@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.0',f);
+test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.1',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
@@ -28,3 +28,9 @@ test('homepage carries the one install prompt verbatim and no retired-edition pr
  const page=await readFile('public/index.html','utf8'),prompt=(await readFile('install/all-platforms.md','utf8')).trimEnd();
  const pre=page.match(/<pre id="p-all">([\s\S]*?)<\/pre>/)[1].replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&amp;','&');
  assert.equal(pre,prompt);assert.ok(!page.includes('p-oa'));assert.ok(!/Saturday|every two weeks/.test(page));});
+test('0.5.1 setup: CES rule only for CES accounts, missing-marker handling, no account question',async()=>{const s=await readFile(SOURCE,'utf8');
+ const inst=s.match(/^- \*\*Institution accounts\.\*\*.*$/gm);assert.equal(inst?.length,1,'one Institution accounts bullet');
+ for(const d of ['@ensign.edu','@byu.edu','@byui.edu','@byupw.edu','other .edu addresses included, never mention CES, FERPA'])assert.ok(inst[0].includes(d),d);
+ assert.ok(!/Ensign|\bCES\b|FERPA/.test(s.replace(inst[0],'')),'CES text only inside the Institution accounts bullet');
+ for(const need of ['"Your instructions already have an AI model and effort section. Replace it with the AI Token Saver block? Everything else stays as it is."','Do not ask which account or address to use first','If there is no such section, add the marked block at the end without asking.','claude.ai > Settings > Account > Instructions for Claude'])assert.ok(s.includes(need),need);
+ assert.ok(!s.includes('Settings > General > instructions for Claude'));});
