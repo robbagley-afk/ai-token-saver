@@ -1,17 +1,17 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-token-saver-all",
-  "version": "0.4.0",
-  "description": "Recommend one exact model and effort, plus a budget choice, on Claude, ChatGPT, Codex, Gemini or Grok from a live guide. Guidance updates on use.",
+  "version": "0.5.0",
+  "description": "Recommend one exact model and effort, plus a budget choice, on the AI platforms you use (Claude, ChatGPT, Codex, Gemini or Grok) from a live guide. Suggests a cheaper platform only when the savings are large. Guidance updates on use.",
   "author": {
     "name": "Rob Bagley"
   },
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "AI Token Saver (All Platforms)",
-        "shortDescription": "Choose models with less waste, on any platform",
-        "longDescription": "For people who use more than one AI platform. Get a short recommendation of one model and effort, plus a budget choice, for your task across the AI platforms you use, based on the live Model Value Map. Ask for detail to see the tradeoff and the Revision. Optional setup adds the guidance to each platform's own instructions and one monthly refresh task. Savings depend on the task and are not guaranteed.",
+        "displayName": "AI Token Saver",
+        "shortDescription": "Choose models with less waste, on the platforms you use",
+        "longDescription": "Get a short recommendation of one model and effort, plus a budget choice, for your task from the live Model Value Map. With ChatGPT alone it stays within ChatGPT. With more than one platform it compares them, suggests another platform or a phased plan only when the savings are large, and always offers to stay where you are. Ask for detail to see the tradeoff and the Revision. Optional setup adds the guidance to each platform's own instructions and one monthly refresh task. Savings depend on the task and are not guaranteed.",
         "developerName": "Rob Bagley",
         "category": "Productivity",
         "logo": "./assets/icon.svg",
