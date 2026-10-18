@@ -40,3 +40,6 @@ test('0.5.2 live-test fixes: ChatGPT Work mode is the ChatGPT runner, setup-mode
 test('0.5.3 one question per reply: offer alone, then platforms question alone, then setup model',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
  for(const need of ['Ask one question per reply','**Platforms question.**','"Which AI apps do you use: ChatGPT, Codex, Claude, Gemini/Antigravity or Grok?" Ask nothing else in that reply'])assert.ok(s.includes(need),`${f}: ${need}`);
  assert.ok(s.indexOf('**Platforms question.**')<s.indexOf('**Setup model.**'),`${f}: platforms before setup model`);}});
+test('0.5.3 sign-in uses "go" and no page opens before "go"',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
+ for(const need of ['then type "go" when you\'re ready." Wait for "go".','Do not open any page or browser, or start any setup step, until then.'])assert.ok(s.includes(need),`${f}: ${need}`);
+ assert.ok(!s.includes('say they are signed in'),`${f}: old sign-in wording`);assert.ok(s.includes('never close it. If it closed, reopen the page'),f);assert.ok(s.includes('If that\'s the account to update, type "go".'),f);}});
