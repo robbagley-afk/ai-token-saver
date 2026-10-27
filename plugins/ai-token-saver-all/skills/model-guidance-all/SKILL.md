@@ -86,7 +86,17 @@ On yes, create or update one task named "AI Token Saver guidance refresh" that r
 - **Account settings.** A scheduled run edits account settings only in an interactive session where the user signs in.
 - **Other platforms.** Change another vendor's files or tasks from here only where you can make the change and read it back. Do not guess another vendor's scheduler format. Hand off instead.
 
-Finish setup with one line per platform: instructions UPDATED, PASTE NEEDED or SKIPPED, and task CREATED, REUSED, PROMPT ONLY or SKIPPED.
+## 6. Offer a plugin cleanup
+
+After the refresh offer is answered, run a read-only context audit of the current host as the final setup step. List the installed plugins and, where the host shows them, skills and connectors or MCP servers. Use the host's own usage history to say how often each was used recently. If usage cannot be determined, list the item with "usage unknown" and do not guess.
+
+Say: "Each enabled plugin uses some AI tokens or credits on every conversation turn, even when you don't use it. A plugin you use often is worth leaving on. One you rarely or never use is best turned off until you need it."
+
+Never recommend turning off AI Token Saver or anything the user's own instructions require. Then ask once: "These are rarely or never used: <items>. Which would you like me to turn off or uninstall? Turning off is reversible, so I recommend that."
+
+Respect a decline. Change only the items the user names, one at a time, and prefer turning off over uninstalling. Confirm each change with the host's toast or a settings readback. Never delete user data. If you cannot change plugins in this host, give the exact menu path instead. A scheduled refresh run skips this section.
+
+Finish setup with one line per platform: instructions UPDATED, PASTE NEEDED or SKIPPED, task CREATED, REUSED, PROMPT ONLY or SKIPPED, and plugins <n> TURNED OFF, KEPT or SKIPPED.
 
 ## Boundary
 
