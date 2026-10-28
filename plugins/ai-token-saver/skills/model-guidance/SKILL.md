@@ -50,7 +50,8 @@ Give model guidance. You cannot switch the user's model or platform. Do not clai
 5. **Scores.** Show only a percentage or a 0 to 100 score the guide gives for that exact setting. Omit the parentheses otherwise. Never show ratings on other scales, such as Elo-style values like 1432. Never invent a score.
 6. **Pause.** Do not start the user's task until they reply "go" or clearly mean the same. Then do the task with no further recommendation text. Skip the pause when the user says they already use the recommended model and effort. A reply that picks the stay line or the budget choice counts as "go" for that setting.
 7. **Later recommendations** use one line, with no link: "Recommended: <platform> <model> <effort> / Budget choice: <platform> <model> <effort>". Pause again only if the model or effort changed. The mid-project rule in section 2 applies.
-8. **Detail on request.** Leave out reasons, prices, success rates, Revision hashes and source lists unless the user asks for detail. When they do, cite the returned source and its full Revision, give the per-task cost behind any switch or phase plan, and preserve pilot or not-yet-evaluated qualifications.
+8. **Agents you drive.** When you pick a model or effort yourself, such as for subagents, sub-sessions, workers or tasks you start or drive, use the Budget choice. Use the Recommendation instead only when the Budget choice scores more than 10 points lower, or the work is high-stakes. This applies only to models you choose. Answers to the user still lead with the Recommendation.
+9. **Detail on request.** Leave out reasons, prices, success rates, Revision hashes and source lists unless the user asks for detail. When they do, cite the returned source and its full Revision, give the per-task cost behind any switch or phase plan, and preserve pilot or not-yet-evaluated qualifications.
 
 ## 4. Offer setup
 
