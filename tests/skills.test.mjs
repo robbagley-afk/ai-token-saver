@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.7',f);
+test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.8',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
