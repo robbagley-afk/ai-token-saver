@@ -1,4 +1,5 @@
 // Builds the one setup prompt a user pastes to install the instruction block and the refresh task on each platform.
+import {lesson} from './lessons.mjs';
 // Order is "most able to change the other platforms on the same computer" first: agents with a shell and desktop control, then chat-only apps.
 export const RUNNER_ORDER=Object.freeze(['claude','codex','antigravity','chatgpt','grok']);
 const NAMES={claude:'Claude',codex:'Codex',antigravity:'Gemini or Antigravity',chatgpt:'ChatGPT',grok:'Grok'};
@@ -22,8 +23,13 @@ Guidance server (read-only, no authentication): https://ai-token-saver.vercel.ap
 
 Run this in ${NAMES[runner]}${many?', the listed app most able to change the others on this computer. If you are a different listed app, do your own platform and hand off as step 4 says':''}. If you are not a listed app, say so and stop.
 
+Setup is slow. While each step runs, show me its lesson below in its own short message, word for word. Show each lesson once.
+${lesson('model')}
+
 Step 1. Instructions for your own platform.
-Call get_instruction_block twice for your platform, mode bootstrap and mode snapshot. The block is the bootstrap text, a blank line, then the snapshot text, wrapped in these exact markers:
+${lesson('instructions')}
+${lesson('context')}
+Call get_instruction_block twice for your platform, mode bootstrap and mode snapshot. The block is the bootstrap text, a blank line, then the snapshot text, wrapped in these exact markers. The bootstrap ends with a one task per chat rule. As you write it, show me its "Why:" line in plain words.
 <!-- model-guidance:start -->
 <!-- model-guidance:end -->
 Where it goes:
@@ -31,6 +37,7 @@ ${order.map(p=>`- ${NAMES[p]}: ${SURFACES[p]}`).join('\n')}
 For a file: confirm the real path, back it up, replace only the one marked section or add it at the end, keep every other byte, show the diff, read it back. Stop on duplicated or malformed markers. If a sync tool or an organization owns the file, give me the text and change nothing. For an account setting: open the settings page in the in-app browser and ask me to sign in to my own account there. Never type, request or store passwords, codes or tokens. Confirm the signed-in account on the page, replace only the marked block, and read it back. If a page has a character limit, shorten the block, never my own text. With no in-app browser, give me the text and the menu path, and mark it done only after I confirm I saved it.
 
 Step 2. Scheduled task for your own platform.
+${lesson('scheduled')}
 After a confirmed save, ask: "Would you like me to set up a scheduled task so your instructions stay updated with the best model recommendations as new models are released?" Continue only on yes.
 List this platform's existing scheduled tasks first. Sort them into: consumer tasks that check or refresh model guidance in instructions, publisher tasks that research or publish a guide, and unrelated tasks. Never change publisher or unrelated tasks. Show me the consumer tasks. Keep only one active: reuse the best match, and pause the other consumer tasks after one yes from me. Pause, do not delete.
 The one task: name "${TASK_NAME}", 1:00 PM in my local timezone on the first Tuesday of each month, so I can be present. If this scheduler has no monthly-weekday option, run every Tuesday at 1:00 PM and have the task exit unless the date is the 1st through the 7th. Say which you used. Reuse an older every-two-weeks refresh task as the best match and change its schedule. A scheduler that lives only in this chat or expires within days does not count: say so and give me the task prompt.

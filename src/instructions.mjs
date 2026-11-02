@@ -1,6 +1,16 @@
 import {readFile,copyFile,writeFile,rename,unlink} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 export const BOOTSTRAP = 'When model choice matters, use the installed AI Token Saver plugin to fetch current guidance. Identify my actual task type first; ask if it is missing. Follow the installed plugin’s recommendation format, explain the task-specific evidence and tradeoff, and cite the returned Revision. Skip model advice and any "go" pause for commands that run my own agent team or workflow, handoffs between agents, continuing work I already approved, and scheduled runs. When you pick a model or effort yourself, such as for subagents, sub-sessions, workers or tasks you start or drive, use the Budget choice. Use the Recommendation instead only when the Budget choice scores more than 10 points lower, or the work is high-stakes. Do not switch my model. If the plugin is unavailable, say so rather than inventing current guidance. Preserve my other instructions and data restrictions.';
+const SESSION_CORE='One task per chat. When I ask for something unrelated, suggest a new chat with a short brief instead of continuing this one. Keep small follow-ups here. At about 150k tokens, or when the task is done, write a handoff (goal, files, decisions, next step) and start fresh. Do not reuse a chat idle for over an hour. Why: each turn re-reads the whole chat, so a long chat spends tokens, context and credits on every reply.';
+// Per-platform wording for the session rule. Only Claude Code gets the auto-compact setting.
+export const SESSION_RULES=Object.freeze({
+ claude:`${SESSION_CORE} In Claude Code, suggest auto-compact at 200k for Opus and Sonnet: run /autocompact 200k, or add "modelSettings": {"claude-opus-5-5": {"autoCompactWindow": 200000}, "claude-sonnet-5-5": {"autoCompactWindow": 200000}} to ~/.claude/settings.json. Why: compacting at 200k keeps each turn smaller than a full context window.`,
+ codex:`${SESSION_CORE} In Codex, start a new session or thread for each task.`,
+ chatgpt:`${SESSION_CORE} In ChatGPT, start a new chat for each task. Use a project to keep related chats together.`,
+ antigravity:`${SESSION_CORE} In Gemini or Antigravity, start a new conversation for each task.`,
+ grok:`${SESSION_CORE} In Grok, start a new chat for each task.`
+});
+export const sessionRule=platform=>platform==='all'?SESSION_CORE:SESSION_RULES[platform];
 const START='<!-- model-guidance:start -->',END='<!-- model-guidance:end -->';
 export function replaceSection(original,block){
  if(typeof original!=='string'||typeof block!=='string'||!block.trim()||block.includes(START)||block.includes(END))throw Error('Invalid instruction block');

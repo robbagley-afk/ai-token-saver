@@ -76,6 +76,10 @@ Rules for every page and file:
 - **Markers.** If `<!-- model-guidance:start -->` and `<!-- model-guidance:end -->` each appear once, start first, edit only the block between them. If either is duplicated, reversed or missing its partner, stop and ask the user how to proceed. If neither appears, look for an older section the user wrote about which model, effort or thinking setting to use, such as "Model, effort, and thinking". If you find one, quote its first and last lines and ask once: "Your instructions already have an AI model and effort section. Replace it with the AI Token Saver block? Everything else stays as it is." On yes, replace exactly that section with the marked block. On no, add the marked block at the end and leave that section alone. If there is no such section, add the marked block at the end without asking. Never change any other text the user wrote. Read the result back. If a page has a character limit, shorten the block, never the user's own text.
 - **Files.** Edit a local instruction file only after a yes for that file. Back it up, change only the marked section, keep every other byte, show the diff, read it back. Stop on duplicated or malformed markers. If a sync process or an organization owns the file, hand over the text and change nothing.
 
+**Lessons.** Setup is slow, so show a short lesson while each step runs. The setup prompt from `get_setup_prompt` carries them. If that tool is unavailable, read LESSONS.md in this skill's folder and show the matching lesson at each step: model choice with the setup-model line, general instructions and context windows while the block is written, scheduled tasks with the refresh offer, and plugins and skills with the cleanup. Show each lesson once, word for word.
+
+**One task per chat.** The instruction block ends with a one task per chat rule fitted to the platform. In Claude Code it also suggests auto-compact at 200k for Opus and Sonnet (`/autocompact 200k`). As you write it, show the user its "Why:" line. If `get_instruction_block` is unavailable, give the user the rule from this paragraph in plain words and do not invent the rest of the block.
+
 ## 5. Offer the scheduled refresh
 
 After a confirmed save, offer once: "Would you like me to set up a scheduled task so your instructions stay updated with the best model recommendations as new models are released?"
@@ -91,7 +95,7 @@ On yes, create or update one task named "AI Token Saver guidance refresh" that r
 
 After the refresh offer is answered, run a read-only context audit of the current host as the final setup step. List the installed plugins and, where the host shows them, skills and connectors or MCP servers. Use the host's own usage history to say how often each was used recently. If usage cannot be determined, list the item with "usage unknown" and do not guess.
 
-Say: "Each enabled plugin uses some AI tokens or credits on every conversation turn, even when you don't use it. A plugin you use often is worth leaving on. One you rarely or never use is best turned off until you need it."
+Show the plugins and skills lesson first. Then say: "Each enabled plugin uses some AI tokens or credits on every conversation turn, even when you don't use it. A plugin you use often is worth leaving on. One you rarely or never use is best turned off until you need it."
 
 Never recommend turning off AI Token Saver or anything the user's own instructions require. Then ask once: "These are rarely or never used: <items>. Which would you like me to turn off or uninstall? Turning off is reversible, so I recommend that."
 
