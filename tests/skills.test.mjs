@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.8',f);
+test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.9',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
@@ -34,7 +34,7 @@ test('0.5.1 setup: missing-marker handling, no account question, Claude Account 
 test('0.5.2 setup model: host browser-work pick before setup, "go" to start, step-up on a failed check',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
  for(const need of ['**Setup model.**','"Recommended: <model> <effort>. Select it in the model picker, then type "go"."','"Computer use and browser work" pick','Start setup only when the user replies "go"','the "Computer use and browser work" upgrade, or when that row lists none, the "Scripted relays and tool workflows" pick','Never switch the model yourself.','A scheduled refresh run skips this step.','After "go", call `get_setup_prompt`'])assert.ok(s.includes(need),`${f}: ${need}`);
  assert.ok(s.indexOf('**Setup model.**')<s.indexOf('After "go", call `get_setup_prompt`'),`${f}: setup model comes before get_setup_prompt`);
- assert.ok(!/Sol low|Sol Light/i.test(s),`${f}: no Sol low setup pick`);}});
+ const setup=s.split('**Setup model.**')[1].split('##')[0];assert.ok(setup.includes('For initial setup in ChatGPT, use GPT-6 Luna High'),`${f}: validated initial setup setting`);}});
 test('0.5.2 live-test fixes: ChatGPT Work mode is the ChatGPT runner, setup-model line stands alone',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
  for(const need of ['Inside the ChatGPT app, in Chat or Work mode, you are the ChatGPT runner, even when the host also calls itself Codex.','Add nothing else: no reason, score, source or Revision.'])assert.ok(s.includes(need),`${f}: ${need}`);}});
 test('0.5.3 one question per reply: offer alone, then platforms question alone, then setup model',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
@@ -43,7 +43,7 @@ test('0.5.3 one question per reply: offer alone, then platforms question alone, 
 test('0.5.3 sign-in uses "go" and no page opens before "go"',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
  for(const need of ['then type "go" when you\'re ready." Wait for "go".','Do not open any page or browser, or start any setup step, until then.'])assert.ok(s.includes(need),`${f}: ${need}`);
  assert.ok(!s.includes('say they are signed in'),`${f}: old sign-in wording`);assert.ok(s.includes('never close it. If it closed, reopen the page'),f);assert.ok(s.includes('If that\'s the account to update, type "go".'),f);}});
-test('0.5.4 scheduled task uses the setup-model pick',async()=>{for(const f of skills){const s=await readFile(f,'utf8');assert.ok(s.includes('Give the task the same model and effort as the setup-model line'),f);}});
+test('scheduled refresh uses independently qualified Sol Light',async()=>{for(const f of skills){const s=await readFile(f,'utf8');assert.ok(s.includes('For ChatGPT scheduled refreshes, use GPT-6.1 Sol Light'),f);}});
 test('0.5.7 advice scope: office commands, handoffs, continuations and scheduled runs get no recommendation; retrieval limits never block task tools',async()=>{for(const f of skills){const s=await readFile(f,'utf8');
  for(const need of ['**When to advise.**','a startup phrase such as "Let\'s go"','continuing work the user already approved, and scheduled or automated runs','Instructions the user wrote for those commands take priority','they never block tools the user\'s own task needs'])assert.ok(s.includes(need),`${f}: ${need}`);}});
 

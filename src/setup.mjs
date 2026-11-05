@@ -16,14 +16,24 @@ export function buildSetupPrompt({platforms,revision}){
  if(typeof revision!=='string'||!revision.trim()||revision.length>128)throw Error('Invalid Revision');
  const order=RUNNER_ORDER.filter(p=>platforms.includes(p)),runner=order[0],many=order.length>1;
  const prompt=`AI Token Saver setup.
+## Installation goal
+
+Before setup, activate: "Verify all accepted installation steps per platform, excluding explicit user declines."
+
+Use a native goal tool; else if Codex/Claude Code/Antigravity exposes /goal, ask the user to submit /goal with this condition; verify active status before proceeding. Text/shell does not activate /goal. Reuse its goal; preserve unrelated goals. Check other hosts. If unavailable/declined, disclose no auto-continuation; use the checklist.
+
+Track per platform: plugin discovery, accepted dependencies/connections, instructions/readback, schedule/readback, optional checks. Status: pending, in progress, verified with evidence, explicitly declined, or blocked. Offer optional steps. Silence, failure and handoff never mean declined or done.
+
+Continue authorized steps; respect sign-in, permission and safety gates and user stops. Keep blocked work pending; do independent steps. No background monitor. Each turn/host handoff carries the goal, checklist, evidence, declines and next action. Do not repeat verified/declined steps unless reopened. Complete the goal/installation only after auditing all platforms: accepted steps verified, optional offers resolved, no pending/blocked work. Else report incomplete and next action.
+
 Platforms to set up: ${order.map(p=>NAMES[p]).join(', ')}
 Done so far: none
 Baseline Revision: ${revision}
 Guidance server (read-only, no authentication): https://ai-token-saver.vercel.app/mcp
 
-Run this in ${NAMES[runner]}${many?', the listed app most able to change the others on this computer. If you are a different listed app, do your own platform and hand off as step 4 says':''}. If you are not a listed app, say so and stop.
+Run this in ${NAMES[runner]}${many?', the preferred runner. Another listed app must finish its own platform and use the step 4 handoff':''}. If you are not a listed app, say so and stop.
 
-Setup is slow. While each step runs, show me its lesson below in its own short message, word for word. Show each lesson once.
+Show each step's lesson once, word for word, in its own short message.
 ${lesson('model')}
 
 Step 1. Instructions for your own platform.
