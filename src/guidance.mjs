@@ -33,8 +33,10 @@ export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sourc
  const rowsFor=(d,platform)=>{if(!PLATFORMS.includes(platform)||platform==='all')throw Error('Unsupported platform');const rows=Object.hasOwn(d.vendors,platform==='chatgpt'?'codex':platform)?d.vendors[platform==='chatgpt'?'codex':platform]:null;if(!rows)throw Error('Unsupported platform');return rows;};
  const head=d=>({updated:d.updated,revision:d.revision,rule:d.rule,source_url:d.source_url});
  return {
-  async getGuidance(platform,category){
+  async getGuidance(platform,category,knownRevision){
    if(!PLATFORMS.includes(platform))throw Error('Unsupported platform');const d=await load();
+   // A caller that already holds rows for this Revision (from this chat or its instruction snapshot) gets a short reply instead of the full table.
+   if(knownRevision&&knownRevision===d.revision){if(platform!=='all')rowsFor(d,platform);return {revision:d.revision,platform,unchanged:true};}
    if(platform==='all'){if(category)throw Error('Category filtering needs one platform');return {...head(d),platform,platforms:structuredClone(d.vendors)};}
    let bullets=rowsFor(d,platform);const openai=bullets===d.bullets;if(category){bullets=bullets.filter(b=>b.task.toLowerCase()===category.toLowerCase());if(!bullets.length)throw Error('Unknown task category; call get_guidance without a category to see current choices.');}return {...head(d),best_value:openai?d.best_value:null,platform,bullets:structuredClone(bullets)};},
   async instructionBlock(platform,mode='bootstrap'){if(!PLATFORMS.includes(platform))throw Error('Unsupported platform');if(mode==='bootstrap')return {platform,mode,text:`${BOOTSTRAP}\n\n${sessionRule(platform)}`};if(mode!=='snapshot')throw Error('Unsupported instruction mode');const d=await load(),rows=rowsFor(d,platform);return {platform,mode,revision:d.revision,text:`Updated: ${d.updated}\nRevision: ${d.revision}\nSource: ${d.source_url}\n\n${d.rule}\n\n${rows.map(b=>`- ${b.task}: ${b.pick}${b.upgrade?` Upgrade only after a failed check: ${b.upgrade}`:''}`).join('\n')}\n\nThis snapshot can become stale. Invoke AI Token Saver for current guidance. Do not switch the user’s model.`};},
