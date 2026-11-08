@@ -47,3 +47,10 @@ test('a missing or malformed optional platform fails only that platform',async()
  await assert.rejects(s.getGuidance('grok'),/Unsupported platform/);await assert.rejects(s.getGuidance('claude'),/Unsupported platform/);
  assert.equal((await s.getGuidance('codex')).bullets.length,2);assert.deepEqual(Object.keys((await s.getGuidance('all')).platforms).sort(),['antigravity','codex']);
 });
+test('known_revision returns a short unchanged reply only when the Revision matches',async()=>{
+ const s=createGuidanceService({fetch:async()=>response(fixture('r7')),sources:['https://example.org']});
+ assert.deepEqual(await s.getGuidance('codex',undefined,'r7'),{revision:'r7',platform:'codex',unchanged:true});
+ assert.equal((await s.getGuidance('codex',undefined,'r6')).bullets.length,2);
+ assert.equal((await s.getGuidance('all',undefined,'r7')).unchanged,true);
+ await assert.rejects(s.getGuidance('grok',undefined,'r7'));
+});
