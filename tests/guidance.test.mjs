@@ -51,6 +51,20 @@ test('known_revision returns a short unchanged reply only when the Revision matc
  const s=createGuidanceService({fetch:async()=>response(fixture('r7')),sources:['https://example.org']});
  assert.deepEqual(await s.getGuidance('codex',undefined,'r7'),{revision:'r7',platform:'codex',unchanged:true});
  assert.equal((await s.getGuidance('codex',undefined,'r6')).bullets.length,2);
- assert.equal((await s.getGuidance('all',undefined,'r7')).unchanged,true);
+ assert.equal((await s.getGuidance('all',undefined,'r7','all')).unchanged,true);
  await assert.rejects(s.getGuidance('grok',undefined,'r7'));
+});
+test('known_revision shortcut requires held rows that cover the requested platform',async()=>{
+ const d=fixture('r7');d.platforms.claude=[{task:'Mechanical text work',pick:'Example Claude Small low'}];
+ const s=createGuidanceService({fetch:async()=>response(d),sources:['https://example.org']});
+ // Codex rows at r7 do not answer a request for every vendor at r7.
+ const all=await s.getGuidance('all',undefined,'r7','codex');assert.ok(!('unchanged' in all));assert.deepEqual(Object.keys(all.platforms).sort(),['claude','codex']);
+ // An all request with no known_platform cannot prove coverage, so it gets the full table.
+ assert.ok(!('unchanged' in await s.getGuidance('all',undefined,'r7')));
+ // Rows for one vendor do not answer another vendor.
+ assert.equal((await s.getGuidance('claude',undefined,'r7','codex')).bullets[0].pick,'Example Claude Small low');
+ // chatgpt and codex share the OpenAI rows, and all covers any single platform.
+ assert.equal((await s.getGuidance('chatgpt',undefined,'r7','codex')).unchanged,true);
+ assert.equal((await s.getGuidance('claude',undefined,'r7','all')).unchanged,true);
+ await assert.rejects(s.getGuidance('codex',undefined,'r7','local'));
 });

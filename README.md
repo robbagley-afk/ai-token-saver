@@ -58,7 +58,7 @@ Invoke AI Token Saver and describe your task and the platforms you use. Ask whic
 
 ## Updates and the refresh task
 
-The skill calls `get_guidance` once per chat. A caller that already holds rows for a Revision, from the chat or a saved instruction snapshot, passes `known_revision`. When it matches, the reply is only the Revision and `unchanged: true`, about 60 bytes instead of 2 to 11 KB. Validated upstream guidance is cached for at most 15 minutes per server instance, so recommendations need no reinstall and no task.
+The skill calls `get_guidance` once per chat. A caller that already holds rows for a Revision, from the chat or a saved instruction snapshot, passes `known_revision` and the platform of those rows as `known_platform`. When it matches and the held rows cover the request, the reply is only the Revision and `unchanged: true`, about 60 bytes instead of 2 to 11 KB. Validated upstream guidance is cached for at most 15 minutes per server instance, so recommendations need no reinstall and no task.
 
 Setup is optional and runs from one prompt. The skill asks which platforms the user has and calls `get_setup_prompt`. The prompt names the app to run it in: the one most able to change the others on the same computer, an agent with a shell first and chat-only apps last. That run sets up every platform it can reach and verify. For the rest it cascades: each app finishes its own platform and writes the handoff prompt for the next.
 
@@ -68,7 +68,7 @@ Before creating the task the prompt lists existing scheduled tasks and keeps onl
 
 ## Public tools
 
-- `get_guidance(platform, known_revision?)`: task picks and Revision, fetched once from the public guide. A matching `known_revision` returns only `unchanged: true`. `chatgpt` and `codex` return OpenAI picks only. `claude`, `antigravity` and `grok` return that vendor only. `all` returns every vendor under `platforms`. Select the applicable category locally.
+- `get_guidance(platform, known_revision?, known_platform?)`: task picks and Revision, fetched once from the public guide. A matching `known_revision` returns only `unchanged: true` when the held rows (`known_platform`, or the requested platform when omitted) cover the request. Rows for one vendor never satisfy a request for `all`. `chatgpt` and `codex` return OpenAI picks only. `claude`, `antigravity` and `grok` return that vendor only. `all` returns every vendor under `platforms`. Select the applicable category locally.
 - `get_instruction_block(platform, mode?)`: stable bootstrap by default; dated full snapshot on request.
 - `compare_revision(installed_revision)`: optional manual revision check.
 - `get_setup_prompt(platforms)`: builds the setup prompt for the platforms named, with the app to run it in, the order and the current Revision as baseline. It changes nothing.
