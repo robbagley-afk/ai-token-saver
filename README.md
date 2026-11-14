@@ -18,10 +18,10 @@ A portable model guidance plugin with a live public guide. It gives one exact mo
 
 ## Current releases
 
-Source is at **0.5.10**: `get_guidance` accepts `known_revision` and returns a short reply when guidance is unchanged. The latest public release is **0.5.10**. Initial ChatGPT setup uses Luna High. Installation activates a supported native goal or uses an explicit checklist, and excludes only steps the user declines.
+Source is at **0.5.11**: `get_guidance` accepts `known_revision` and `known_platform`, and returns a short reply only when guidance is unchanged and the rows you hold cover the platform you asked for. The latest public release is **0.5.11**. Initial ChatGPT setup uses Luna High. Installation activates a supported native goal or uses an explicit checklist, and excludes only steps the user declines.
 
-- [All Platforms 0.5.10](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.10)
-- [OpenAI compatibility package 0.5.10](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.10), retained for existing installations.
+- [All Platforms 0.5.11](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.11)
+- [OpenAI compatibility package 0.5.11](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.11), retained for existing installations.
 
 Separate institutional editions use their own account release process and are not included in these releases.
 
