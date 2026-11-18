@@ -68,3 +68,14 @@ test('known_revision shortcut requires held rows that cover the requested platfo
  assert.equal((await s.getGuidance('claude',undefined,'r7','all')).unchanged,true);
  await assert.rejects(s.getGuidance('codex',undefined,'r7','local'));
 });
+
+test('terra_guidance reaches OpenAI and all requests only when valid', async()=>{
+ const terra={heading:'When to use GPT-6.1 Terra',intro:'Intro.',items:['One.','Two.'],source:'https://example.org/s'};
+ const mk=(extra)=>createGuidanceService({sources:['https://example.org/guide.json'],fetch:async()=>({ok:true,text:async()=>JSON.stringify({...fixture(),...extra})})});
+ const s=mk({terra_guidance:terra});
+ assert.deepEqual((await s.getGuidance('codex')).terra_guidance,terra);
+ assert.deepEqual((await s.getGuidance('all')).terra_guidance,terra);
+ assert.equal((await s.getGuidance('codex','Mechanical text work')).terra_guidance,undefined);
+ assert.equal((await mk({terra_guidance:{heading:'x'}}).getGuidance('codex')).terra_guidance,undefined);
+ assert.equal((await mk({}).getGuidance('codex')).terra_guidance,undefined);
+});

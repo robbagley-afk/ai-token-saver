@@ -9,6 +9,7 @@ export const PLATFORMS=Object.freeze(['chatgpt','codex',...OPTIONAL,'all']);
 export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sources=SOURCES}={}){
  let cached=null,expires=0,inflight=null;
  const text=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max;
+ const terraOf=g=>g&&text(g.heading,120)&&text(g.intro,1000)&&Array.isArray(g.items)&&g.items.length>0&&g.items.length<=10&&g.items.every(i=>text(i,1000))&&text(g.source,300)?{heading:g.heading,intro:g.intro,items:[...g.items],source:g.source}:null;
  const normalize=rows=>Array.isArray(rows)&&rows.length&&rows.length<=50&&rows.every(b=>text(b?.task,160)&&text(b?.pick,2000)&&(b.upgrade===undefined||text(b.upgrade,2000)))?rows.map(b=>({task:b.task,pick:b.pick,...(b.upgrade?{upgrade:b.upgrade}:{})})):null;
  async function load(){
   if(cached&&now()<expires)return cached;
@@ -23,7 +24,7 @@ export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sourc
     const normalized=normalize(d?.platforms?.codex);if(!normalized)continue;
     // Allowlist per-vendor rows only. The codex list is required; other vendors are optional and fail alone. Local-model rows and cross-vendor best_value are intentionally excluded.
     const vendors={codex:normalized};for(const key of OPTIONAL){const rows=normalize(d.platforms[key]);if(rows)vendors[key]=rows;}
-    cached={updated:d.updated,revision:d.revision,rule:d.rule,bullets:normalized,vendors,best_value:normalized.find(b=>b.task==='General agentic judgment')?.pick??null,source_url:url};expires=now()+900000;return cached;
+    cached={updated:d.updated,revision:d.revision,rule:d.rule,bullets:normalized,vendors,best_value:normalized.find(b=>b.task==='General agentic judgment')?.pick??null,terra_guidance:terraOf(d.terra_guidance),source_url:url};expires=now()+900000;return cached;
    }catch{/* Retry the next canonical mirror, without logging request content. */}}
    throw Error('Current guidance is unavailable. Try again later; no stale recommendation was returned.');
   })();
@@ -43,8 +44,8 @@ export function createGuidanceService({fetch=globalThis.fetch,now=Date.now,sourc
    // Without known_platform, a single-platform request assumes the held rows are for that platform. An all request without known_platform gets the full table.
    const held=knownPlatform??(platform==='all'?null:platform);
    if(knownRevision&&knownRevision===d.revision&&held&&covers(held,platform)){if(platform!=='all')rowsFor(d,platform);return {revision:d.revision,platform,unchanged:true};}
-   if(platform==='all'){if(category)throw Error('Category filtering needs one platform');return {...head(d),platform,platforms:structuredClone(d.vendors)};}
-   let bullets=rowsFor(d,platform);const openai=bullets===d.bullets;if(category){bullets=bullets.filter(b=>b.task.toLowerCase()===category.toLowerCase());if(!bullets.length)throw Error('Unknown task category; call get_guidance without a category to see current choices.');}return {...head(d),best_value:openai?d.best_value:null,platform,bullets:structuredClone(bullets)};},
+   if(platform==='all'){if(category)throw Error('Category filtering needs one platform');return {...head(d),platform,platforms:structuredClone(d.vendors),...(d.terra_guidance?{terra_guidance:structuredClone(d.terra_guidance)}:{})};}
+   let bullets=rowsFor(d,platform);const openai=bullets===d.bullets;if(category){bullets=bullets.filter(b=>b.task.toLowerCase()===category.toLowerCase());if(!bullets.length)throw Error('Unknown task category; call get_guidance without a category to see current choices.');}return {...head(d),best_value:openai?d.best_value:null,platform,bullets:structuredClone(bullets),...(openai&&!category&&d.terra_guidance?{terra_guidance:structuredClone(d.terra_guidance)}:{})};},
   async instructionBlock(platform,mode='bootstrap'){if(!PLATFORMS.includes(platform))throw Error('Unsupported platform');if(mode==='bootstrap')return {platform,mode,text:`${BOOTSTRAP}\n\n${sessionRule(platform)}`};if(mode!=='snapshot')throw Error('Unsupported instruction mode');const d=await load(),rows=rowsFor(d,platform);return {platform,mode,revision:d.revision,text:`Updated: ${d.updated}\nRevision: ${d.revision}\nSource: ${d.source_url}\n\n${d.rule}\n\n${rows.map(b=>`- ${b.task}: ${b.pick}${b.upgrade?` Upgrade only after a failed check: ${b.upgrade}`:''}`).join('\n')}\n\nThis snapshot can become stale. Invoke AI Token Saver for current guidance. Do not switch the user’s model.`};},
   async setupPrompt(platforms){const built=buildSetupPrompt({platforms,revision:'pending'});const d=await load();return {revision:d.revision,...buildSetupPrompt({platforms:built.order,revision:d.revision})};},
   async compareRevision(installedRevision){if(!text(installedRevision,128))throw Error('Invalid installed Revision');const d=await load();return {current:d.revision,changed:d.revision!==installedRevision};}
