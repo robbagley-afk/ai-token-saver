@@ -18,7 +18,7 @@ test('retired edition is the multiplatform skill plus a retirement notice, and i
  assert.equal(stub,buildRetiredSkill(src),'run node scripts/build-retired-skill.mjs');
  assert.match(stub,/^---\nname: model-guidance\n/);assert.ok(stub.includes('give no recommendation and no notice of your own'));assert.ok(!stub.includes('works as before'));assert.equal(buildRetiredSkill(src.replaceAll('\n','\r\n')),stub);assert.throws(()=>buildRetiredSkill('no header\r\n'),/Unexpected/);assert.ok(stub.includes('https://github.com/robbagley-afk/ai-token-saver'));
  assert.ok(stub.endsWith(src.slice(src.indexOf('Give model guidance.'))));});
-test('every manifest is 0.5.0 and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.11',f);
+test('every manifest carries the release version and the retired edition says so',async()=>{for(const f of manifests)assert.equal(JSON.parse(await readFile(f,'utf8')).version,'0.5.12',f);
  const stub=JSON.parse(await readFile(manifests[0],'utf8'));assert.match(stub.extensions['com.openai'].interface.displayName,/retired/);assert.match(stub.description,/^Retired\./);
  assert.equal(JSON.parse(await readFile(manifests[1],'utf8')).extensions['com.openai'].interface.displayName,'AI Token Saver');});
 test('marketplaces list the multiplatform plugin first and Claude lists only it',async()=>{
@@ -49,4 +49,14 @@ test('0.5.7 advice scope: office commands, handoffs, continuations and scheduled
 
 test('setup ends with the plugin cleanup offer',async()=>{const s=await readFile('plugins/ai-token-saver-all/skills/model-guidance-all/SKILL.md','utf8');const i=s.indexOf('## 6. Offer a plugin cleanup');assert.ok(i>s.indexOf('## 5. Offer the scheduled refresh'));assert.ok(i<s.indexOf('## Boundary'));for(const t of['on every conversation turn','Never recommend turning off AI Token Saver','A scheduled refresh run skips this section','plugins <n> TURNED OFF, KEPT or SKIPPED'])assert.ok(s.includes(t),t);});
 
-test('agents you drive default to the Budget choice',async()=>{const {BOOTSTRAP}=await import('../src/instructions.mjs');for(const t of[BOOTSTRAP,await readFile('plugins/ai-token-saver-all/skills/model-guidance-all/SKILL.md','utf8')])assert.ok(t.includes('use the Budget choice. Use the Recommendation instead only when the Budget choice scores more than 10 points lower'));});
+test('the bootstrap and active skill make task reliability the starting requirement',async()=>{
+ const {BOOTSTRAP}=await import('../src/instructions.mjs');
+ const skill=await readFile(SOURCE,'utf8');
+ for(const text of [BOOTSTRAP,skill]){
+  assert.ok(text.includes('lowest-cost eligible setting that meets the task’s reliability needs'));
+  assert.ok(!text.includes('scores more than 10 points lower'));
+ }
+ assert.ok(skill.indexOf('Establish the minimum reliability')<skill.indexOf('Use five benchmark points'));
+ assert.ok(skill.includes('same task benchmark, version and scale'));
+ assert.ok(skill.includes('five benchmark points per doubling of benchmark cost as a soft default'));
+});

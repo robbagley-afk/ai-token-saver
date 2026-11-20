@@ -18,10 +18,10 @@ A portable model guidance plugin with a live public guide. It gives one exact mo
 
 ## Current releases
 
-Source is at **0.5.11**: `get_guidance` accepts `known_revision` and `known_platform`, and returns a short reply only when guidance is unchanged and the rows you hold cover the platform you asked for. The latest public release is **0.5.11**. Initial ChatGPT setup uses Luna High. Installation activates a supported native goal or uses an explicit checklist, and excludes only steps the user declines.
+**0.5.12** starts with the cheapest eligible setting that reliably fits the task. It compares quality, time and cost on the same benchmark and treats five points per doubling of cost as a guideline for upgrades. Initial ChatGPT setup uses Luna High. Installation activates a supported native goal or uses an explicit checklist, and excludes only steps the user declines.
 
-- [All Platforms 0.5.11](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.11)
-- [OpenAI compatibility package 0.5.11](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.11), retained for existing installations.
+- [All Platforms 0.5.12](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.12)
+- [OpenAI compatibility package 0.5.12](https://github.com/robbagley-afk/ai-token-saver/releases/tag/v0.5.12), retained for existing installations.
 
 Separate institutional editions use their own account release process and are not included in these releases.
 
@@ -62,9 +62,11 @@ The skill calls `get_guidance` once per chat. A caller that already holds rows f
 
 Setup is optional and runs from one prompt. The skill asks which platforms the user has and calls `get_setup_prompt`. The prompt names the app to run it in: the one most able to change the others on the same computer, an agent with a shell first and chat-only apps last. That run sets up every platform it can reach and verify. For the rest it cascades: each app finishes its own platform and writes the handoff prompt for the next.
 
-Per platform the prompt installs one instruction block between `model-guidance` markers (a stable pointer plus a dated snapshot with its Revision) and one scheduled task, "AI Token Saver guidance refresh", at 1:00 PM local time on the first Tuesday of each month, so the user can be present. Each run reads the live guide, opens each instructions page, asks the user to sign in if needed, replaces only the marked block and reads it back. A scheduled run edits account settings only in an interactive session where the user signs in.
+Per platform the prompt installs one instruction block between `model-guidance` markers (a stable pointer plus a dated snapshot with its Revision) and one scheduled task, "AI Token Saver guidance refresh", at 1:00 PM local time on the first Tuesday of each month, so the user can be present. Each run reads the live guide and checks that its Revision matches the proposed snapshot. It keeps the previous verified block if that check fails. After confirming a match, it replaces only the marked block and reads it back. A scheduled run edits account settings only in an interactive session where the user signs in.
 
 Before creating the task the prompt lists existing scheduled tasks and keeps only one consumer task active per platform. Other guidance-refresh tasks, including the older every-two-weeks task, are paused after the user confirms, never deleted. Tasks that research or publish a guide are never touched. If the scheduler has no monthly-weekday option, the task runs every Tuesday and exits unless the date is the 1st through the 7th. If no durable scheduler exists, the prompt says no task was created.
+
+The [Model Value Map](https://robbagley-afk.github.io/model-value-map/) supplies task picks and a Revision. [ParetoNet](https://paretonet.dev/) is a live comparison dashboard for model and effort settings. Its Artificial Analysis data describes API benchmarks. A position on its frontier alone cannot establish task fit or access on a specific plan.
 
 ## Public tools
 
